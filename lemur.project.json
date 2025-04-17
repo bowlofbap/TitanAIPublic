@@ -1,8 +1,0 @@
-{
-    "name": "TitanAITests",
-    "root": "tests/specs",
-    "mounts": {
-      "Shared": "src/Shared",
-        "TestEZ": "Packages/_Index/roblox_testez@0.4.1/testez"
-    }
-  }
