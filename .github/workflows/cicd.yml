@@ -40,6 +40,8 @@ jobs:
         with:
           path: ~/.aftman
           key: aftman-${{ hashFiles('aftman.toml') }}
+      - name: Make test.sh executable
+        run: chmod +x ./scripts/shell/test.sh
       - name: Run tests
         run: ./scripts/shell/test.sh test.project.json $TEST_TASK_FILE
         env:
