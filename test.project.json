@@ -13,6 +13,9 @@
                         "$path": "Packages/_Index/roblox_testez@0.4.1/testez/src"
                     }
                 }
+              },
+              "TestEZ":{
+                "$path": "Packages/TestEZ.lua"
               }
         },
         "TestRunner": {
