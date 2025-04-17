@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local runTests = require(ReplicatedStorage.Shared.runTests)
+local runTests = require(ReplicatedStorage.TestRunner)
 
 local ok = runTests()
 if ok then
