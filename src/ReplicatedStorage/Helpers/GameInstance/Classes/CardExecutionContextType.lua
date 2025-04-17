@@ -5,6 +5,7 @@ export type context = {
 	getNodeAt: (self:context, coordinates: Vector2) -> any,
 	getTargetGroupFromCardData: (self:context, groupChoice: string) -> table,
 	getMainCoordinates: (self:context) -> Vector2,
+	setCardData:(self: context, cardData: any) -> ()
 }
 
 return {}

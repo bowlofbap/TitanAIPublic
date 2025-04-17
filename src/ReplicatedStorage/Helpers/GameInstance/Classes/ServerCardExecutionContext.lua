@@ -45,5 +45,8 @@ function ServerCardExecutionContext:getTargetGroupFromCardData(groupChoice)
 	return targetGroup
 end
 
+function ServerCardExecutionContext:setCardData(cardData)
+	self._cardData = cardData
+end
 
 return ServerCardExecutionContext

@@ -3,8 +3,6 @@ local DamageTypes = require(game:GetService("ReplicatedStorage").Enums.DamageTyp
 local TargetTypes = require(game:GetService("ReplicatedStorage").Enums.TargetTypes)
 local GameEvents = require(game:GetService("ReplicatedStorage").Enums.GameEvents)
 
-local TargetHelper = require(game:GetService("ReplicatedStorage").Helpers.TargetHelper)
-
 local DamageOverTimeStatus = setmetatable({}, { __index = Status })
 DamageOverTimeStatus.__index = DamageOverTimeStatus
 

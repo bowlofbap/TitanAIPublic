@@ -25,8 +25,9 @@ function CustomEffect:execute(primaryTargets, effectTargets, gameInstance, conte
 		effectChoice = TargetChoices.ALLY
 	}
 	
-	local altData = self:getAltData(context:getCardData(), adjustments)
-	local targets, targetIds, nodes, nodeIds = TargetHelper.getTargets(context:getCaster(), gameInstance, altData, nil, TargetTypes.SELF)
+	local altCardData = self:getAltData(context:getCardData(), adjustments)
+	context:setCardData(altCardData)
+	local targets = TargetingRules.getEffectTargets({context:getCaster()}, context)
 	gameInstance:applyStatus(context:getCaster(), targets, self.effectData.buffData)
 end
 

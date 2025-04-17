@@ -4,8 +4,6 @@ local TargetTypes = require(game:GetService("ReplicatedStorage").Enums.TargetTyp
 local GameEvents = require(game:GetService("ReplicatedStorage").Enums.GameEvents)
 local StatusTypes = require(game:GetService("ReplicatedStorage").Enums.StatusTypes)
 
-local TargetHelper = require(game:GetService("ReplicatedStorage").Helpers.TargetHelper)
-
 local CustomStatus = setmetatable({}, { __index = Status })
 CustomStatus.__index = CustomStatus
 

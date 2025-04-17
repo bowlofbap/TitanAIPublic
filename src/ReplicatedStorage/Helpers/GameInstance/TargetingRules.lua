@@ -50,7 +50,7 @@ function TargetingRules.getValidTargets(context: ContextType.context)
 	return handler.getTargets(context)
 end
 
-function TargetingRules.getEffectTargets(primaryTargets, context: ContextType.context)
+function TargetingRules.getEffectTargets(primaryTargets: table, context: ContextType.context)
 	local cardData = context:getCardData()
 	local radius = cardData.radius or 0
 	local effectTargets = {}

@@ -2,10 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Effect = require(script.Parent.Effect)
 local ContextType = require(ReplicatedStorage.Helpers.GameInstance.Classes.CardExecutionContextType)
-local TargetChoices = require(game:GetService("ReplicatedStorage").Enums.TargetChoices)
-local Directions = require(game:GetService("ReplicatedStorage").Enums.Directions)
-
-local TargetHelper = require(game:GetService("ReplicatedStorage").Helpers.TargetHelper)
 
 local MoveEffect = setmetatable({}, { __index = Effect })
 MoveEffect.__index = MoveEffect
@@ -25,9 +21,9 @@ function MoveEffect.new(effectData)
 end
 
 function MoveEffect:execute(primaryTargets, effectTargets, gameInstance, context: ContextType.context)
-	local cardData = context:getCardData()
 	local caster = context:getCardData()
 	local direction = self.effectData.direction
+	--[[
 	if self.effectData.direction == Directions.CLOSER_Y then
 		local closerData = {
 			effectChoice = TargetChoices.ENEMY,
@@ -58,7 +54,7 @@ function MoveEffect:execute(primaryTargets, effectTargets, gameInstance, context
 			print("best solution is to stay still")
 			return
 		end
-	end
+	end]]
 	for _, target in ipairs(effectTargets)  do
 		gameInstance:moveTarget(caster, target, direction, self.effectData.value)
 	end 
