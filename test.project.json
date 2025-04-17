@@ -11,6 +11,7 @@
             }
         },
         "TestRunner": {
+            "$className": "ModuleScript",
             "$path": "src/ReplicatedStorage/TestRunner.lua"
         },
         "$className": "ReplicatedStorage",
