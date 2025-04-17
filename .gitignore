@@ -23,6 +23,7 @@ dist/
 
 # === Wally (Dependency Manager) ===
 wally.lock
+Packages/
 packages/
 
 # === Luau LSP / Selene / Stylua ===
