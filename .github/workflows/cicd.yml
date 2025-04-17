@@ -26,6 +26,8 @@ jobs:
           key: aftman-${{ hashFiles('aftman.toml') }}
       - name: Install Wally dependencies
         run: wally install
+      - name: List installed Wally packages
+        run: ls -R Packages
 
   luau-tests:
     name: Run Luau tests via Open Cloud
