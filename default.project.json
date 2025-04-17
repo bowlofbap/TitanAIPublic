@@ -1,0 +1,39 @@
+{
+    "name": "TitanAI",
+    "tree": {
+      "$className": "DataModel",
+      "ReplicatedStorage": {
+        "$className": "ReplicatedStorage",
+        "Client": {
+            "$path": "src/ReplicatedStorage/Client"
+        },
+        "Enums":{
+            "$path": "src/ReplicatedStorage/Enums"
+        },
+        "Helpers":{
+            "$path": "src/ReplicatedStorage/Helpers"
+        },
+        "Models":{
+            "$path": "src/ReplicatedStorage/Models"
+        },
+        "Remotes":{
+            "$path": "src/ReplicatedStorage/Remotes"
+        },
+        "Repos":{
+            "$path": "src/ReplicatedStorage/Repos"
+        },
+        "Stages":{
+            "$path": "src/ReplicatedStorage/Stages"
+        }
+      },
+      "StarterPlayer": {
+            "$className": "StarterPlayer",
+            "StarterPlayerScripts": {
+                "$path": "src/StarterPlayerScripts"
+            }
+      },
+      "ServerScriptService": {
+            "$path": "src/ServerScriptService"
+      }
+    }
+  }

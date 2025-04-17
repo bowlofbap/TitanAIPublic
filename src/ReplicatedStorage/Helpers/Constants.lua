@@ -1,0 +1,37 @@
+local Constants = {
+	BOARD_SIZE = Vector2.new(8, 4),
+	MONEY_NAME = "Money",
+	PLAYER_SETTINGS = {
+		STARTING_MONEY = 500,
+		STARTING_HAND_SIZE = 6
+	},
+	MAP_SETTINGS = {
+		TOTAL_DEPTH = 13,
+		MAX_WIDTH = 5,
+		MIN_WIDTH = 2,
+		MIN_STARTING_WIDTH = 4,
+		MAX_STARTING_WIDTH = 6,
+		NODE_SETTINGS = {
+			SCALE = 17.5,
+			NOISE = 4,
+			INITIAL_POSITION = Vector3.new(500, 0, 500)
+		},
+		EVENT_CHANCES = {
+			MONSTER = 20,
+			SHOP = 6,
+		}
+	},
+	INSTANCE_SETTINGS = {
+		INSTANCE_POSITION = Vector3.new(250, 1, 250),
+		REST_SETTINGS = {
+			HEAL_VALUE = 15
+		},
+		BATTLE_SETTINGS = {
+			CRITICAL_VALUE = 1.5,
+			VULNERABLE_VALUE = 1.5,
+			WEAKEN_VALUE = 0.33,
+		},
+	}
+}
+
+return Constants

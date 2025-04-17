@@ -1,0 +1,63 @@
+local c = require(game:GetService("ReplicatedStorage").Repos.CardRepo)
+
+local realDeck = {
+	{
+		cardName = c.R001.key,
+		amount = 4,
+		upgraded = false
+	},
+	{
+		cardName = c.R002.key,
+		amount = 3,
+		upgraded = false
+	}, 
+	{
+		cardName = c.ZC001.key,
+		amount = 1,
+		upgraded = false
+	}, 
+}
+
+local testDeck = {
+	{
+		cardName = c.R001.key,
+		amount = 1,
+		upgraded = false
+	},
+	{
+		cardName = c.R002.key,
+		amount = 1,
+		upgraded = false
+	},
+	{
+		cardName = c.ZC001.key,
+		amount = 1,
+		upgraded = false
+	},
+	{
+		cardName = c.ZC002.key,
+		amount = 1,
+		upgraded = true
+	}, 
+	{
+		cardName = c.ZC003.key,
+		amount = 1,
+		upgraded = false
+	}, 
+	{
+		cardName = c.ZC004.key,
+		amount = 1,
+		upgraded = false
+	}, 
+}
+
+local repo = {
+	unitName = script.Name,
+	turnEnergy = 3,
+	turnMovement = 4,
+	health = 70,
+	deck = testDeck
+}
+
+
+return repo
