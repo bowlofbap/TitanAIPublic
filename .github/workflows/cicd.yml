@@ -45,7 +45,7 @@ jobs:
       - name: Run tests
         run: ./scripts/shell/test.sh test.project.json $TEST_TASK_FILE
         env:
-          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+          ROBLOX_API_KEY: ${{ secrets.TESTKEY }}
           ROBLOX_UNIVERSE_ID: ${{ vars.ROBLOX_TEST_UNIVERSE_ID }}
           ROBLOX_PLACE_ID: ${{ vars.ROBLOX_TEST_PLACE_ID }}
           TEST_TASK_FILE: tasks/runTests.luau
