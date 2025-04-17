@@ -1,5 +1,4 @@
 #!/bin/sh
-
 set -e
 
 rojo build "$1" --output dist.rbxl
