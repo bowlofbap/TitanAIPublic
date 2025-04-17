@@ -4,11 +4,7 @@
       "$className": "DataModel",
       "ReplicatedStorage": {
         "Packages": {
-            "$className": "Folder",
-            "TestEZ": {
-              "$className": "ModuleScript",
-              "$path": "Packages/TestEZ/_Index/roblox_testez@0.4.1/testez/init.lua"
-            }
+              "$path": "Packages"
         },
         "TestRunner": {
             "$path": "src/ReplicatedStorage/TestRunner.lua"
