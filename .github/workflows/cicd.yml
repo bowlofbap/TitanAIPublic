@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3.3.0
       - name: Set up Aftman
-        uses: ok-nick/setup-aftman@v0.2
+        uses: ok-nick/setup-aftman@v0.4.2
       - name: Cache Aftman tools
         uses: actions/cache@v3.2.3
         with:
