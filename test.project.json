@@ -4,7 +4,10 @@
       "$className": "DataModel",
       "ReplicatedStorage": {
         "Packages": {
-            "$path": "Packages"
+            "$className": "Folder",
+            "TestEZ": { 
+                "$path": "Packages/TestEZ" 
+            }
         },
         "$className": "ReplicatedStorage",
         "Client": {
