@@ -10,6 +10,9 @@
               "$path": "Packages/TestEZ/_Index/roblox_testez@0.4.1/testez/init.lua"
             }
         },
+        "TestRunner": {
+            "$path": "src/ReplicatedStorage/TestRunner.lua"
+        },
         "$className": "ReplicatedStorage",
         "Client": {
             "$path": "src/ReplicatedStorage/Client"
