@@ -5,15 +5,6 @@
       "ReplicatedStorage": {
         "Packages": {
               "$className": "Folder",
-              "_Index": {
-                "$className": "Folder",
-                "roblox_testez@0.4.1": {
-                    "$className": "Folder",
-                    "testez": {
-                        "$path": "Packages/_Index/roblox_testez@0.4.1/testez/src"
-                    }
-                }
-              },
               "TestEZ":{
                 "$path": "Packages/TestEZ.lua"
               }
