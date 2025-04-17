@@ -25,7 +25,7 @@ jobs:
           path: ~/.aftman
           key: aftman-${{ hashFiles('aftman.toml') }}
       - name: Install Wally dependencies
-        run: aftman run wally install
+        run: wally install
 
   luau-tests:
     name: Run Luau tests via Open Cloud
@@ -67,4 +67,3 @@ jobs:
           key: aftman-${{ hashFiles('aftman.toml') }}
       - name: Upload production build
         run: aftman run rojo upload default.project.json --api_key ${{ secrets.DEPLOYKEY }} --universe_id ${{ vars.ROBLOX_PRODUCTION_UNIVERSE_ID }} --asset_id ${{ vars.ROBLOX_PRODUCTION_PLACE_ID }}
-        
