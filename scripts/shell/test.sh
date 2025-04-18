@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
 
+echo "🟡 Current working directory:"
+pwd
+
+echo "📦 Listing top-level contents:"
+ls -al
 echo "📁 Checking Packages folder contents:"
 ls -al Packages || {
   echo "❌ Packages folder not found!"
