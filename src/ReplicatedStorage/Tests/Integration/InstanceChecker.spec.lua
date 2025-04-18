@@ -1,5 +1,5 @@
 return function()
-	describe("Instances created", function()
+	describe("Instances", function()
 		local ReplicatedStorage = game:GetService("ReplicatedStorage")
 		local ServerScriptService = game:GetService("ServerScriptService")
 		local MockedPlayer
@@ -17,6 +17,7 @@ return function()
 		local dependencies
 		
 		beforeEach(function()
+			print("setting up test")
 			MockedPlayer = Instance.new("Part")
 			MockedData = require(ReplicatedStorage.Repos.StarterRepos.Ze)
 			MapNodeTypes = require(ReplicatedStorage.Enums.Entity.MapNodeTypes)
@@ -29,6 +30,9 @@ return function()
 				return CurrentInstance
 			end)
 			MockedPosition = Vector3.new(0,0,0)
+		end)
+
+		it("Confirms that GameInstance is initialized correctly", function()
 			MockedStageData = require(ReplicatedStorage.Stages.Level1).tier1[1]
 			dependencies = {
 				mapNodeType = MapNodeTypes.REGULAR_ENEMY, 
@@ -43,9 +47,6 @@ return function()
 				idGenerator = IdGenerator, 
 				eventObserver = EventObserver,
 			}
-		end)
-
-		it("Confirms that GameInstance is initialized correctly", function()
 			CurrentInstance = NodeInstanceFactory:createInstance(MapNodeTypes.REGULAR_ENEMY, dependencies)
 			CurrentInstance:start()
 			expect(CurrentInstance._turnCount).to.equal(1)
