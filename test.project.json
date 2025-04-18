@@ -18,9 +18,6 @@
                 "$path": "Packages/TestEZ.lua"
               }
         },
-        "TestRunner": {
-            "$path": "src/ReplicatedStorage/TestRunner.lua"
-        },
         "$className": "ReplicatedStorage",
         "Client": {
             "$path": "src/ReplicatedStorage/Client"
