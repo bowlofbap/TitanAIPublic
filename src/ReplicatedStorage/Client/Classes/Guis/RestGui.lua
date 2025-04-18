@@ -3,19 +3,17 @@ local BaseGui = require(game:GetService("ReplicatedStorage").Client.Classes.Guis
 local GameActions = require(game:GetService("ReplicatedStorage").Enums.Rest.GameActions)
 local GuiEvent = game:GetService("ReplicatedStorage").Client.BindableEvents.GuiEvent
 
-local player = game:GetService("Players").LocalPlayer
+local RestGui = setmetatable({}, { __index = BaseGui }) 
+RestGui.__index = RestGui
 
-local ShopGui = setmetatable({}, { __index = BaseGui }) 
-ShopGui.__index = ShopGui
-
-function ShopGui.new(clientPlayer)
+function RestGui.new(clientPlayer)
 	local self = BaseGui.new(clientPlayer, script.Name)
-	setmetatable(self, ShopGui)
+	setmetatable(self, RestGui)
 	self:init()
 	return self
 end
 
-function ShopGui:init()
+function RestGui:init()
 	self.object.CloseFrame.TextButton.MouseButton1Click:Connect(function()
 		self:hide()
 		self.clientPlayer:getCurrentInstance():requestGameAction(GameActions.REQUEST_END_GAME)
@@ -36,19 +34,19 @@ function ShopGui:init()
 	end)
 end
 
-function ShopGui:enable()
+function RestGui:enable()
 	self.object.RestFrame.BackgroundTransparency = 0
 	self.object.UpgradeFrame.BackgroundTransparency = 0
 end
 
-function ShopGui:disable()
+function RestGui:disable()
 	self.object.RestFrame.BackgroundTransparency = .6
 	self.object.UpgradeFrame.BackgroundTransparency = .6
 	GuiEvent:Fire("CardSelectionGui", "hide")
 end
 
-function ShopGui:show()
+function RestGui:show()
 	self:enable()
 	self.object.Enabled = true
 end
-return ShopGui
+return RestGui

@@ -129,8 +129,11 @@ return function()
 				eventObserver = EventObserver,
 			}
 			CurrentInstance = NodeInstanceFactory:createInstance(CurrentMapNodeType, dependencies)
+			expect(CurrentInstance._used).to.equal(false)
 			CurrentInstance:start()
+			CurrentInstance:requestRest()
 			expect(rested).to.equal(true)
+			expect(CurrentInstance._used).to.equal(true)
 		end)
 	end)
 end

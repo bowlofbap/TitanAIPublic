@@ -32,25 +32,33 @@ function RestInstance:connectEvents()
 		if action == GameActions.REQUEST_END_GAME then
 			self:fireGameEvent(GameEventsTypes.FINISH_INSTANCE, self)
 		elseif action == GameActions.REQUEST_REST then
-			if not self._used then
-				self._used = true
-				self:fireGameEvent(GameEventsTypes.PLAYER_HEALTH_HURT_HEAL, {value = Constants.INSTANCE_SETTINGS.REST_SETTINGS.HEAL_VALUE})
-				self.stateSyncBuffer:add(StateUpdate.new(UiActions.USE_INSTANCE, {}))
-				self.stateSyncBuffer:flush()
-			else
-				warn("Rest has already been used")
-			end
+			self:requestRest(data)
 		elseif action == GameActions.REQUEST_UPGRADE then
-			if not self._used then
-				self._used = true
-				self:fireGameEvent(GameEventsTypes.UPGRADE_CARD, {cardId = data})
-				self.stateSyncBuffer:add(StateUpdate.new(UiActions.USE_INSTANCE, {}))
-				self.stateSyncBuffer:flush()
-			else
-				warn("Rest has already been used")
-			end
+			self:requestUpgrade(data)
 		end
 	end)
+end
+
+function RestInstance:requestRest(data)
+	if not self._used then
+		self._used = true
+		self:fireGameEvent(GameEventsTypes.PLAYER_HEALTH_HURT_HEAL, {value = Constants.INSTANCE_SETTINGS.REST_SETTINGS.HEAL_VALUE})
+		self.stateSyncBuffer:add(StateUpdate.new(UiActions.USE_INSTANCE, {}))
+		self.stateSyncBuffer:flush()
+	else
+		warn("Rest has already been used")
+	end
+end
+
+function RestInstance:requestUpgrade(data)
+	if not self._used then
+		self._used = true
+		self:fireGameEvent(GameEventsTypes.UPGRADE_CARD, {cardId = data})
+		self.stateSyncBuffer:add(StateUpdate.new(UiActions.USE_INSTANCE, {}))
+		self.stateSyncBuffer:flush()
+	else
+		warn("Rest has already been used")
+	end
 end
 
 function RestInstance:getCameraSubject()
