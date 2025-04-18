@@ -17,6 +17,7 @@ return function()
 		local dependencies
 		
 		beforeEach(function()
+			print("setting up for new instance")
 			MockedPlayer = Instance.new("Part")
 			MockedData = require(ReplicatedStorage.Repos.StarterRepos.TestData)
 			MapNodeTypes = require(ReplicatedStorage.Enums.Entity.MapNodeTypes)

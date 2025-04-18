@@ -3,7 +3,6 @@ local Classes = ReplicatedStorage.Client.Classes
 local GuiEvent = ReplicatedStorage.Client.BindableEvents.GuiEvent
 local Model = ReplicatedStorage.Models.NodeInstances.Chest
 
-local Constants = require(game:GetService("ReplicatedStorage").Helpers.Constants)
 
 local ClientNodeInstance = require(Classes.ClientNode.ClientNodeInstance)
 local SequenceDispatcher = require(Classes.SequenceDispatcher)
@@ -15,18 +14,11 @@ ClientChest.__index = ClientChest
 function ClientChest.new(instanceFolder)
 	local self = ClientNodeInstance.new(instanceFolder)
 	setmetatable(self, ClientChest)
-	self:initModel(instanceFolder)
+	self:initModel(Model, instanceFolder)
 	self._sequenceDispatcher = SequenceDispatcher.new()
 	self:bindDispatcher()
 	self:bindEvents()
 	return self
-end
-
-function ClientChest:initModel(instanceFolder)
-	self._model = Model:Clone()
-	local centerPosition = Constants.INSTANCE_SETTINGS.INSTANCE_POSITION
-	self._model:PivotTo(CFrame.new(centerPosition))
-	self._model.Parent = instanceFolder
 end
 
 function ClientChest:bindDispatcher()

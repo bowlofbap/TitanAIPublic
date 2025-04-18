@@ -1,20 +1,11 @@
-local Tables = require(game:GetService("ReplicatedStorage").Helpers.Tables)
-local localPlayer = game:GetService("Players").LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Classes = ReplicatedStorage.Client.Classes
 
-local PlayerDeck = require(game:GetService("ReplicatedStorage").Client.Classes.GameModules.PlayerDeck)
-local PlayerHand = require(game:GetService("ReplicatedStorage").Client.Classes.GameModules.PlayerHand)
-local PlayerDiscard = require(game:GetService("ReplicatedStorage").Client.Classes.GameModules.PlayerDiscard)
-local CardHolder = require(game:GetService("ReplicatedStorage").Client.Classes.GameModules.CardHolder)
+local GuiEvent = ReplicatedStorage.Client.BindableEvents.GuiEvent
+local Model = ReplicatedStorage.Models.NodeInstances.Shop
 
-local GuiEvent = game:GetService("ReplicatedStorage").Client.BindableEvents.GuiEvent
-local GuiFunction = game:GetService("ReplicatedStorage").Client.BindableFunctions.GuiFunction
-
-local UiActions = require(game:GetService("ReplicatedStorage").Enums.Shop.UiActions)
-local ClientEvents = require(game:GetService("ReplicatedStorage").Enums.ClientEvents)
-local GameDataRequests = require(game:GetService("ReplicatedStorage").Enums.GameDataRequests)
-local GameResults = require(game:GetService("ReplicatedStorage").Enums.GameResults)
-
-local ClientNodeInstance = require(game:GetService("ReplicatedStorage").Client.Classes.ClientNode.ClientNodeInstance)
+local ClientNodeInstance = require(Classes.ClientNode.ClientNodeInstance)
+local UiEventHandler = require(Classes.ClientChestModules.UiEventHandler)
 
 local ClientShop = setmetatable({}, {__index = ClientNodeInstance})
 ClientShop.__index = ClientShop
@@ -22,21 +13,28 @@ ClientShop.__index = ClientShop
 function ClientShop.new(instanceFolder, shopData)
 	local self = ClientNodeInstance.new(instanceFolder)
 	setmetatable(self, ClientShop)
-	self.shopData = shopData
-	local battleGui = GuiFunction:Invoke("ShopGui", "get")
+	self._shopData = shopData
+	self:initModel(Model, instanceFolder)
 	GuiEvent:Fire("ShopGui", "loadData", shopData)
+	self:bindDispatcher()
 	self:bindEvents()
 	return self
 end
 
+function ClientShop:bindDispatcher()
+	local dispatcher = self._sequenceDispatcher
+	UiEventHandler.bind(dispatcher)
+end
+
+function ClientShop:getCameraSubject()
+	return self._model
+end
+
 function ClientShop:bindEvents()
 	local events = self.instanceFolder.Events
-	events.ToClient.GameUiEvent.OnClientEvent:Connect(function(uiAction, data)
-		if uiAction == UiActions.SHOW_GUI then
-			GuiEvent:Fire("ShopGui", "show")
-		elseif uiAction == UiActions.PURCHASED_CARD then
-			GuiEvent:Fire("ShopGui", "markItemAsBought", data.id)
-		end
+	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
+		print(sequence)
+		self._sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
 	end)
 end 
 
