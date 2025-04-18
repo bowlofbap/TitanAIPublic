@@ -2,6 +2,7 @@ return function()
 	describe("Instances", function()
 		local ReplicatedStorage = game:GetService("ReplicatedStorage")
 		local ServerScriptService = game:GetService("ServerScriptService")
+		local GameEvents = require(ReplicatedStorage.Enums.GameEvents)
 		local MockedPlayer
 		local MockedData
 		local MapNodeTypes
@@ -80,6 +81,11 @@ return function()
 		end)
 
 		it("Confirms ShopInstance is initalized correctly", function()
+			local purchaseReflected = false
+			EventObserver:subscribeTo(GameEvents.CHANGE_MONEY, function(data)
+				purchaseReflected = true
+			end)
+
 			local CurrentMapNodeType = MapNodeTypes.SHOP
 			dependencies = {
 				mapNodeType = CurrentMapNodeType, 
@@ -101,6 +107,30 @@ return function()
 			local success, purchasedCardData, cost = CurrentInstance:requestPurchase({id = id})
 			expect(success).to.equal(true)
 			expect(cardData).to.equal(purchasedCardData)
+			expect(purchaseReflected).to.equal(true)
+		end)
+
+		it("Confirms RestInstance is initalized correctly", function()
+			local rested = false
+			EventObserver:subscribeTo(GameEvents.PLAYER_HEALTH_HURT_HEAL, function(value)
+				rested = true
+			end)
+			local CurrentMapNodeType = MapNodeTypes.REST
+			dependencies = {
+				mapNodeType = CurrentMapNodeType, 
+				robloxPlayer = MockedPlayer, 
+				playerState = PlayerState, 
+				deckManager = DeckManager,
+				deckData = DeckManager:getPlayableDeck(),
+				echoManager = EchoManager, 
+				parent = workspace, 
+				centerPosition = MockedPosition, 
+				idGenerator = IdGenerator, 
+				eventObserver = EventObserver,
+			}
+			CurrentInstance = NodeInstanceFactory:createInstance(CurrentMapNodeType, dependencies)
+			CurrentInstance:start()
+			expect(rested).to.equal(true)
 		end)
 	end)
 end
