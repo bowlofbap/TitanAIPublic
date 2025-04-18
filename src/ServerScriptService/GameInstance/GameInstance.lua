@@ -6,7 +6,6 @@ local Enums = ReplicatedStorage.Enums
 local Board = require(ServerScriptService.GameInstance.Board)
 local GamePlayer = require(ServerScriptService.GameInstance.GamePlayer)
 local UnitHolder = require(ServerScriptService.GameInstance.UnitHolder)
-local Unit = require(ServerScriptService.GameInstance.Unit)
 local RewardsHandler = require(ServerScriptService.GameInstance.RewardsHandler)
 local StateSyncBuffer = require(ServerScriptService.General.StateSyncBuffer)
 local StateUpdate = require(ServerScriptService.General.StateUpdate)
@@ -15,16 +14,11 @@ local GameActions = require(Enums.GameActions)
 local UiActions = require(Enums.GameInstance.UiActions)
 local GameEventsTypes = require(Enums.GameEvents)
 local GameDataRequests = require(Enums.GameDataRequests)
-local TargetTypes = require(Enums.TargetTypes)
 local GamePhases = require(Enums.GamePhases)
 local StatusTypes = require(Enums.StatusTypes)
 local DamageTypes = require(Enums.DamageTypes)
 local GameResults = require(Enums.GameResults)
 local CardTypes = require(Enums.CardTypes)
-local AudioSettings = require(Enums.Client.AudioSettings)
-
-local AudioClientEvent = ReplicatedStorage.Remotes.AudioClientEvent
-local AudioRepo = require(ReplicatedStorage.Repos.AudioRepo)
 
 local TargetingRules = require(ReplicatedStorage.Helpers.GameInstance.TargetingRules)
 local CardExecutionContext = require(ReplicatedStorage.Helpers.GameInstance.Classes.ServerCardExecutionContext)
@@ -32,7 +26,6 @@ local ContextType = require(ReplicatedStorage.Helpers.GameInstance.Classes.CardE
 local Tables = require(ReplicatedStorage.Helpers.Tables)
 
 local Constants = require(ReplicatedStorage.Helpers.Constants)
-local ClientObjectLoader = require(ReplicatedStorage.Helpers.ClientObjectLoader)
 
 local NodeInstance = require(ServerScriptService.NodeInstance.NodeInstance)
 local GameInstance = {}
@@ -62,8 +55,8 @@ function GameInstance:connectEvents()
 	local gameFunctions = self.folder.Functions
 	local gameEvents = self.folder.Events
 	
-	local c1 = gameEvents.ToServer.GameActionRequest.OnServerEvent:Connect(function(robloxPlayer, action, data) --may change to just generic data, action parameters...
-		if robloxPlayer ~= self.player.robloxPlayer then warn("invalid player sent data") return false end
+	gameEvents.ToServer.GameActionRequest.OnServerEvent:Connect(function(robloxPlayer, action, data) --may change to just generic data, action parameters...
+		if robloxPlayer ~= self.player.robloxPlayer then warn("invalid player sent data") return nil end
 		if action == GameActions.PLAY_CARD then
 			local cardId = data.cardId
 			local targetCoordinates = data.targetCoordinates
@@ -71,7 +64,6 @@ function GameInstance:connectEvents()
 			local cardToPlay = self.player.hand:getCardById(cardId)
 			if not cardToPlay then
 				warn("card is not in hand anymore")
-				return 
 			end
 			local context = CardExecutionContext.new(self, cardToPlay.cardData, caster, targetCoordinates)
 			if TargetingRules.canBePlayed(context) and self.player:canPlayCard(cardToPlay) then
@@ -139,12 +131,14 @@ function GameInstance:connectEvents()
 			local card = unit:getLoadedCard()
 			return card.id
 		end
+		return nil
 	end
 end
 
 function GameInstance:relayEvent(eventType, data)
 	if eventType == GameEventsTypes.OPENING_CARD_PACK then
-		self:updateClientUi(UiActions.OPEN_CARD_PACK, data)
+		self.stateSyncBuffer:add(StateUpdate.new(UiActions.OPEN_CARD_PACK, data))
+		self.stateSyncBuffer:flush()
 	end
 end
 
@@ -164,7 +158,7 @@ function GameInstance:executePlayerCard(cardToPlay, context: ContextType.context
 	if not cardToPlay:isDepletable() and cardToPlay.cardData.cardType ~= CardTypes.DEPLOY then
 		self:discardCard(cardToPlay)
 	elseif cardToPlay:isDepletable() then
-		self:updateClientUi(UiActions.DEPLETE_CARD, {cardId = cardToPlay.id})
+		self.stateSyncBuffer:add(StateUpdate.new(UiActions.DEPLETE_CARD, {cardId = cardToPlay.id}))
 		self:fireGameEvent(GameEventsTypes.DEPLETING_CARD, {card = cardToPlay}) 
 	elseif cardToPlay.cardData.cardType == CardTypes.DEPLOY then
 		self.stateSyncBuffer:add(StateUpdate.new(UiActions.DEPLOY_UNIT, {cardId = cardToPlay.id}))
@@ -415,7 +409,8 @@ function GameInstance:applyBlock(source, targets, blockAmount)
 	for _, target in ipairs(targets) do
 		local finalBlock = self:calculateFinalBlock(source, target, blockAmount)
 		--TODO: probably same thing as the heal where we fire a game event
-		local blockAmount = target:applyBlock(finalBlock)
+		local appliedBlock = target:applyBlock(finalBlock)
+		self:fireGameEvent(GameEventsTypes.BLOCKING, {target, blockAmount = appliedBlock})
 		self.stateSyncBuffer:add(StateUpdate.new(UiActions.APPLY_BLOCK, 
 			{
 				unitId = target.Id,
@@ -573,8 +568,8 @@ end
 function GameInstance:start()
 	self:loadPlayer(self.playerState)
 	self:loadStage(self.stageData)
+	self.stateSyncBuffer:add(StateUpdate.new(UiActions.SHOW_GUI, {guiName = "BattleGui"}))
 	self:startPlayerTurn()
-	self:updateClientUi(UiActions.SHOW_GUI, "BattleGui")
 	self:fireGameEvent(GameEventsTypes.GAME_START, self)
 end
 
@@ -603,7 +598,7 @@ function GameInstance:startPlayerTurn()
 	self:startUnitTurn(self.player.unit)
 	self:resetUnitBlock(self.player.unit)
 	self:fireGameEvent(GameEventsTypes.CHANGE_PHASE, {phase = GamePhases.PLAYER_TURN})
-	self:updateClientUi(UiActions.CHANGE_PHASE, {phase = GamePhases.PLAYER_TURN})
+	self.stateSyncBuffer:add(StateUpdate.new(UiActions.CHANGE_PHASE, {phase = GamePhases.PLAYER_TURN}))
 	self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_FRAMES, self:getUiData()))
 	self:reloadEnemyActions()
 	self.isPlayerTurn = true
@@ -618,7 +613,7 @@ function GameInstance:updatePlayableCards()
 	for _, card in ipairs(handCards) do
 		table.insert(playableCardData, {id = card.id, isPlayable = self:cardCanBePlayed(card, nil, self.player.unit.Id)})
 	end
-	self:updateClientUi(UiActions.UPDATE_PLAYABLE_CARDS, {playableCardData = playableCardData})
+	self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_PLAYABLE_CARDS, {playableCardData = playableCardData}))
 end
 
 function GameInstance:reloadEnemyActions()
@@ -631,7 +626,7 @@ end
 function GameInstance:startEnemyTurn()
 	if not self._isPlaying then return end
 	self:fireGameEvent(GameEventsTypes.CHANGE_PHASE, {phase = GamePhases.ENEMY_TURN})
-	self:updateClientUi(UiActions.CHANGE_PHASE, {phase = GamePhases.ENEMY_TURN})
+	self.stateSyncBuffer:add(StateUpdate.new(UiActions.CHANGE_PHASE, {phase = GamePhases.ENEMY_TURN}))
 	local enemies = self.unitHolder:getEnemies(self.player.unit.Team)
 	local lastEnemy = nil
 	for _, enemy in ipairs(enemies) do
@@ -654,11 +649,6 @@ function GameInstance:startEnemyTurn()
 		lastEnemy.Hover = false
 	end
 	self:startPlayerTurn()
-end
-
-function GameInstance:refreshPlayerUi()
-	local uiData = self:getUiData()
-	self:updateClientUi(UiActions.UPDATE_FRAMES, uiData)
 end
 
 function GameInstance:getUiData()

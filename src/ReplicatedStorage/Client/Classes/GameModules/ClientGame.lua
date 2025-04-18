@@ -2,16 +2,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Classes = ReplicatedStorage.Client.Classes
 local Enums = ReplicatedStorage.Enums
 
-local Tables = require(ReplicatedStorage.Helpers.Tables)
-local localPlayer = game:GetService("Players").LocalPlayer
-
 local PlayerDeck = require(Classes.GameModules.PlayerDeck)
 local PlayerHand = require(Classes.GameModules.PlayerHand)
 local PlayerDiscard = require(Classes.GameModules.PlayerDiscard)
 local CardHolder = require(Classes.GameModules.CardHolder)
 local ClientBoard = require(Classes.GameModules.ClientBoard)
 local ClientUnitHolder = require(Classes.GameModules.ClientUnitHolder)
-local ClientUnit = require(Classes.GameModules.ClientUnit)
 local HandLayoutManager = require(Classes.GameModules.HandLayoutManager)
 local SequenceDispatcher = require(Classes.SequenceDispatcher)
 local UiEventHandler = require(Classes.GameModules.UiEventHandler)
@@ -75,39 +71,8 @@ function ClientGame:bindEvents()
 	
 	events.ToClient.GameUiEvent.OnClientEvent:Connect(function(uiAction, data)
 		if uiAction == UiActions.SHOW_GUI then
-			GuiEvent:Fire("BattleGui", "show", data)
-		elseif uiAction == UiActions.CHANGE_PHASE then
-			GuiEvent:Fire("BattleGui", "changePhase", data)
-		elseif uiAction == UiActions.RESET_DECK then
-			local deckData = data.deckData
-			local discardData = data.discardData
-			local newDeck = {}
-			local newDiscard = {}
-			for _, data in ipairs(deckData) do
-				local card = self.cardHolder:getCardById(data.id)
-				table.insert(newDeck, card)
-			end
-			for _, data in ipairs(discardData) do
-				local card = self.cardHolder:getCardById(data.id)
-				table.insert(newDiscard, card)
-			end
-			self.playerDeck:swapDeck(newDeck)
-			self.playerDiscard:swapDiscard(newDiscard)
-			GuiEvent:Fire("BattleGui", "updateFrames", {Deck = {value = #deckData}, Discard = {value = #discardData}})
 		elseif uiAction == UiActions.OPEN_CARD_PACK then
-			GuiEvent:Fire("CardPackGui", "show", data)
-		elseif uiAction == UiActions.DEPLETE_CARD then
-			self:depleteCard(data.cardId)
 		elseif uiAction == UiActions.UPDATE_PLAYABLE_CARDS then
-			local playableCardData = data.playableCardData
-			for _, cardData in ipairs(playableCardData) do
-				local card = self.cardHolder:getCardById(cardData.id)
-				if cardData.isPlayable then
-					card:showPlayable()
-				else
-					card:hidePlayable()
-				end
-			end
 		end
 	end)
 	
@@ -116,6 +81,18 @@ function ClientGame:bindEvents()
 			self.isPaused.Value = data.value --TODO: DO NOTE: that this event is CURRENTLY unused. we might need to get rid of it for unneeded purposes
 		end
 	end)
+end
+
+function ClientGame:updatePlayableCards(data)
+	local playableCardData = data.playableCardData
+	for _, cardData in ipairs(playableCardData) do
+		local card = self.cardHolder:getCardById(cardData.id)
+		if cardData.isPlayable then
+			card:showPlayable()
+		else
+			card:hidePlayable()
+		end
+	end
 end
 
 function ClientGame:endGame(data)

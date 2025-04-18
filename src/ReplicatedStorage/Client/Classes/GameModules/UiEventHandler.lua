@@ -22,6 +22,10 @@ function UiEventDispatcher.bind(dispatcher)
 		unit:moveToNode(targetNode)
 	end)
 
+	dispatcher:register(UiActions.CHANGE_PHASE, function(data, context) 
+		context.guiEvent:Fire("BattleGui", "changePhase", data)
+	end)
+
 	dispatcher:register(UiActions.UPDATE_FRAMES, function(data, context)
 		context.guiEvent:Fire("BattleGui", "updateFrames", data)
 	end)
@@ -112,10 +116,26 @@ function UiEventDispatcher.bind(dispatcher)
 		context.clientGame:deployUnit(data.cardId)
 	end)
 
+	dispatcher:register(UiActions.DEPLETE_CARD, function(data, context)
+		context.clientGame:depleteCard(data.cardId)
+	end)
+
+	dispatcher:register(UiActions.SHOW_GUI, function(data, context)
+		context.guiEvent:Fire(data.guiName, "show")
+	end)
+	
+	dispatcher:register(UiActions.OPEN_CARD_PACK, function(data, context)
+		context.guiEvent:Fire("CardPackGui", "show", data)
+	end)
+
 	dispatcher:register(UiActions.SET_PLAYER_UNIT, function(data, context)
 		local unit = context.clientGame.clientUnitHolder:getUnit(data.serializedUnitData.id)
 		if not unit then warn("Unit not found") return end
 		context.clientGame:setPlayerUnit(unit)
+	end)
+
+	dispatcher:register(UiActions.UPDATE_PLAYABLE_CARDS, function(data, context)
+		context.clientGame:updatePlayableCards(data)
 	end)
 
 	dispatcher:register(UiActions.END_GAME, function(data, context)

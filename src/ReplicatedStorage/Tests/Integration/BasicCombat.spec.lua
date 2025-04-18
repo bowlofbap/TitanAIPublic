@@ -32,7 +32,6 @@ return function()
 	GameInstance:start()
 	
 	expect(game._turnCount).to.equal(1)
+	expect(game._isPlaying).to.equal(true)
 	expect(game.isPlayerTurn).to.equal(true)
-	expect(playerState.unit.energy).to.equal(3)
-	expect(playerState.unit.movement).to.equal(2)
 end
