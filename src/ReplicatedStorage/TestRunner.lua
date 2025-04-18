@@ -4,7 +4,9 @@ return function()
 	local testsFolder = game:GetService("ReplicatedStorage"):WaitForChild("Tests")
 
 	local result = TestEZ.TestBootstrap:run({ testsFolder }, TestEZ.Reporters.TextReporter)
-	print(result)
+	for p, v in pairs(result) do
+		print(p, v)
+	end
 	if result.failureCount > 0 then
 		warn("❌ Some tests failed.")
 		return false
