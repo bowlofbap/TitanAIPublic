@@ -24,14 +24,7 @@ jobs:
         with:
           path: ~/.aftman
           key: aftman-${{ hashFiles('aftman.toml') }}
-      - name: Install Wally dependencies
-        run: wally install
-      - name: Show working directory
-        run: pwd
-      - name: Check Wally install output
-        run: |
-         ls -al
-         ls -al Packages || echo "Packages folder not found"
+
 
   luau-tests:
     name: Run Luau tests via Open Cloud
@@ -48,6 +41,14 @@ jobs:
         with:
           path: ~/.aftman
           key: aftman-${{ hashFiles('aftman.toml') }}
+      - name: Install Wally dependencies
+        run: wally install
+      - name: Show working directory
+        run: pwd
+      - name: Check Wally install output
+        run: |
+           ls -al
+           ls -al Packages || echo "Packages folder not found"
       - name: Make test.sh executable
         run: chmod +x ./scripts/shell/test.sh
       - name: Run tests
