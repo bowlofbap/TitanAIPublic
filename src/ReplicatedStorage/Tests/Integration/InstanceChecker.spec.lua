@@ -17,7 +17,6 @@ return function()
 		local dependencies
 		
 		beforeEach(function()
-			print("setting up test")
 			MockedPlayer = Instance.new("Part")
 			MockedData = require(ReplicatedStorage.Repos.StarterRepos.Ze)
 			MapNodeTypes = require(ReplicatedStorage.Enums.Entity.MapNodeTypes)
@@ -33,9 +32,10 @@ return function()
 		end)
 
 		it("Confirms that GameInstance is initialized correctly", function()
-			MockedStageData = require(ReplicatedStorage.Stages.Level1).tier1[1]
+			local CurrentMapNodeType = MapNodeTypes.REGULAR_ENEMY
+			MockedStageData = require(ReplicatedStorage.Stages.Level1).test[1]
 			dependencies = {
-				mapNodeType = MapNodeTypes.REGULAR_ENEMY, 
+				mapNodeType = CurrentMapNodeType, 
 				robloxPlayer = MockedPlayer, 
 				playerState = PlayerState, 
 				deckManager = DeckManager,
@@ -47,11 +47,35 @@ return function()
 				idGenerator = IdGenerator, 
 				eventObserver = EventObserver,
 			}
-			CurrentInstance = NodeInstanceFactory:createInstance(MapNodeTypes.REGULAR_ENEMY, dependencies)
+			CurrentInstance = NodeInstanceFactory:createInstance(CurrentMapNodeType, dependencies)
 			CurrentInstance:start()
 			expect(CurrentInstance._turnCount).to.equal(1)
 			expect(CurrentInstance._isPlaying).to.equal(true)
 			expect(CurrentInstance.isPlayerTurn).to.equal(true)
+			expect(#CurrentInstance.unitHolder:getAll()).to.equal(2)
+		end)
+
+		it("Confirms ChestInstance is initalized correctly", function()
+			local CurrentMapNodeType = MapNodeTypes.CHEST
+			MockedStageData = require(ReplicatedStorage.Stages.Level1).test[1]
+			dependencies = {
+				mapNodeType = CurrentMapNodeType, 
+				robloxPlayer = MockedPlayer, 
+				playerState = PlayerState, 
+				deckManager = DeckManager,
+				deckData = DeckManager:getPlayableDeck(), 
+				stageData = MockedStageData, 
+				echoManager = EchoManager, 
+				parent = workspace, 
+				centerPosition = MockedPosition, 
+				idGenerator = IdGenerator, 
+				eventObserver = EventObserver,
+			}
+			CurrentInstance = NodeInstanceFactory:createInstance(CurrentMapNodeType, dependencies)
+			CurrentInstance:start()
+			expect(CurrentInstance.cardRewardClaimed).to.equal(false)
+			local reward = CurrentInstance.rewardsHandler:serializeRewards()[1]
+			expect(CurrentInstance:openReward({id = reward.id}).to.equal(true))
 		end)
 	end)
 end

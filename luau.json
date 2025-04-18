@@ -1,0 +1,12 @@
+{
+    "globals": [
+      "it",
+      "describe",
+      "expect",
+      "beforeEach",
+      "afterEach"
+    ],
+    "ignoreGlobs": [
+      "Packages/**"
+    ]
+  }

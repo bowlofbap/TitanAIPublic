@@ -41,7 +41,7 @@ function RewardsHandler:retrieveReward(rewardId)
 	return nil
 end
 
-function RewardsHandler:serializeRewards(id)
+function RewardsHandler:serializeRewards()
 	local clientRewards = {}
 	for _, reward in ipairs(self.rewards) do
 		table.insert(clientRewards, reward:serialize())

@@ -68,14 +68,9 @@ function ClientGame:bindEvents()
 		print(sequence)
 		self.sequenceDispatcher:enqueue(sequence, {clientGame = self, guiEvent = GuiEvent})
 	end)
-	
-	events.ToClient.GameUiEvent.OnClientEvent:Connect(function(uiAction, data)
-		if uiAction == UiActions.SHOW_GUI then
-		elseif uiAction == UiActions.OPEN_CARD_PACK then
-		elseif uiAction == UiActions.UPDATE_PLAYABLE_CARDS then
-		end
-	end)
-	
+
+	--TODO: remove the GameUiEvent..?
+
 	events.Bindable.ClientEvent.Event:Connect(function(clientEvent, data)
 		if clientEvent == ClientEvents.TOGGLE_PAUSE then
 			self.isPaused.Value = data.value --TODO: DO NOTE: that this event is CURRENTLY unused. we might need to get rid of it for unneeded purposes
@@ -114,11 +109,9 @@ end
 
 function ClientGame:_drawCard(data)
 	local cardId = data.cardId
-	local deckData = data.deckData
 	local drawnCard = self.playerDeck:draw(cardId)
 	self.playerHand:add(drawnCard)
 	self.handLayoutManager:addCard(drawnCard)
-	--GuiEvent:Fire("BattleGui", "updateFrames", {Deck = {value = #deckData}})
 end
 
 function ClientGame:_resetDeck(data)
@@ -137,13 +130,6 @@ function ClientGame:_resetDeck(data)
 	self.playerDeck:swapDeck(newDeck)
 	self.playerDiscard:swapDiscard(newDiscard)
 end
-
-function ClientGame:getTargetsForCard(cardId)
-	local functions = self.instanceFolder.Functions
-	local targetIds, nodeParts = functions.GameDataRequest:InvokeServer(GameDataRequests.TARGETS, {cardId = cardId})
-	return targetIds, nodeParts
-end
-
 
 function ClientGame:discard(cardId)
 	local card = self.cardHolder:getCardById(cardId)

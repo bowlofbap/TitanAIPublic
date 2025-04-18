@@ -1,10 +1,13 @@
-local localPlayer = game:GetService("Players").LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Classes = ReplicatedStorage.Client.Classes
+local GuiEvent = ReplicatedStorage.Client.BindableEvents.GuiEvent
+local Model = ReplicatedStorage.Models.NodeInstances.Chest
 
-local GuiEvent = game:GetService("ReplicatedStorage").Client.BindableEvents.GuiEvent
+local UiActions = require(ReplicatedStorage.Enums.GameInstance.UiActions)
 
-local UiActions = require(game:GetService("ReplicatedStorage").Enums.GameInstance.UiActions)
-
-local ClientNodeInstance = require(game:GetService("ReplicatedStorage").Client.Classes.ClientNode.ClientNodeInstance)
+local ClientNodeInstance = require(Classes.ClientNode.ClientNodeInstance)
+local SequenceDispatcher = require(Classes.SequenceDispatcher)
+local UiEventHandler = require(Classes.ClientChestModules.UiEventHandler)
 
 local ClientChest = setmetatable({}, {__index = ClientNodeInstance})
 ClientChest.__index = ClientChest
@@ -12,18 +15,27 @@ ClientChest.__index = ClientChest
 function ClientChest.new(instanceFolder)
 	local self = ClientNodeInstance.new(instanceFolder)
 	setmetatable(self, ClientChest)
+	self._model = Model:Clone()
+	self._sequenceDispatcher = SequenceDispatcher.new()
+	self:bindDispatcher()
 	self:bindEvents()
 	return self
 end
 
+function ClientChest:bindDispatcher()
+	local dispatcher = self.sequenceDispatcher
+	UiEventHandler.bind(dispatcher)
+end
+
+function ClientChest:getCameraSubject()
+	return self._model
+end
+
 function ClientChest:bindEvents()
 	local events = self.instanceFolder.Events
-	events.ToClient.GameUiEvent.OnClientEvent:Connect(function(uiAction, data)
-		if uiAction == UiActions.SHOW_GUI then
-			GuiEvent:Fire("BattleVictoryGui", "show", data.rewards)
-		elseif uiAction == UiActions.OPEN_CARD_PACK then
-			GuiEvent:Fire("CardPackGui", "show", data)
-		end
+	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
+		print(sequence)
+		self.sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
 	end)
 end 
 

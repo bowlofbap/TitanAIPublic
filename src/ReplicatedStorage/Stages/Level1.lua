@@ -1,6 +1,21 @@
 local RewardTypes = require(game:GetService("ReplicatedStorage").Enums.GameInstance.RewardTypes)
 
 local Level1 = {
+	test = {
+		{
+			units = {
+				{
+					name = "GlitchGoblin",
+					position = Vector2.new(2, 2)
+				},
+			},
+			rewards = {
+				RewardTypes.MONEY_SMALL,
+				RewardTypes.CARDS_BASIC,
+				RewardTypes.ECHO_COMMON
+			}
+		},
+	}
 	tier1 = {
 		{
 			units = {
@@ -26,7 +41,6 @@ local Level1 = {
 				RewardTypes.CARDS_BASIC,
 				RewardTypes.ECHO_COMMON
 			}
-			
 		},
 		
 		{
