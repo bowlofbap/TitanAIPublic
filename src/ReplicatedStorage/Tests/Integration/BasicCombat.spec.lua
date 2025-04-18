@@ -31,7 +31,7 @@ return function()
     GameInstance = NodeInstanceFactory:createInstance(MapNodeTypes.REGULAR_ENEMY, dependencies)
 	GameInstance:start()
 	
-	expect(game._turnCount).to.equal(1)
-	expect(game._isPlaying).to.equal(true)
-	expect(game.isPlayerTurn).to.equal(true)
+	expect(GameInstance._turnCount).to.equal(1)
+	expect(GameInstance._isPlaying).to.equal(true)
+	expect(GameInstance.isPlayerTurn).to.equal(true)
 end
