@@ -3,7 +3,6 @@ local Classes = ReplicatedStorage.Client.Classes
 local GuiEvent = ReplicatedStorage.Client.BindableEvents.GuiEvent
 local Model = ReplicatedStorage.Models.NodeInstances.Chest
 
-local UiActions = require(ReplicatedStorage.Enums.GameInstance.UiActions)
 local Constants = require(game:GetService("ReplicatedStorage").Helpers.Constants)
 
 local ClientNodeInstance = require(Classes.ClientNode.ClientNodeInstance)

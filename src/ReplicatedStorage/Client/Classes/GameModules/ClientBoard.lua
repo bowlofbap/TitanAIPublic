@@ -3,8 +3,6 @@ local Constants = require(game:GetService("ReplicatedStorage").Helpers.Constants
 
 local ClientBoard = {}
 ClientBoard.__index = ClientBoard
-
-
 function ClientBoard.new(serializedBoard, parent)
 	local self = setmetatable({}, ClientBoard)
 	self._nodes = {}
