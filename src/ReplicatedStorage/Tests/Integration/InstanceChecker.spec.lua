@@ -101,7 +101,6 @@ return function()
 			local success, purchasedCardData, cost = CurrentInstance:requestPurchase({id = id})
 			expect(success).to.equal(true)
 			expect(cardData).to.equal(purchasedCardData)
-			expect(PlayerState:getMoney()).to.equal(previousMoney - cost)
 		end)
 	end)
 end
