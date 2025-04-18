@@ -45,7 +45,7 @@ function ChestInstance:connectEvents()
 
 	gameFunctions.GameDataRequest.OnServerInvoke = function(robloxPlayer, requestType, data)
 		if requestType == GameDataRequests.OPEN_REWARD then
-			self:openReward(data)
+			return self:openReward(data)
 		end
 	end
 end
@@ -63,23 +63,21 @@ end
 function ChestInstance:relayEvent(eventType, data)
 	if eventType == GameEventsTypes.OPENING_CARD_PACK then
 		self.stateSyncBuffer:add(StateUpdate.new(UiActions.OPEN_CARD_PACK, data))
+		self.stateSyncBuffer:flush()
 	end
 end
 
 function ChestInstance:start()
 	local rewards = self.rewardsHandler:serializeRewards()
 	self.stateSyncBuffer:add(StateUpdate.new(UiActions.SHOW_GUI, {rewards = rewards}))
+	self.stateSyncBuffer:flush()
 end
 
 function ChestInstance:connectPlayerToInstance(nodeType)
-	local cardData = self.player.deck:serialize()
-	local boardData = self.board:serialize()
 	self:fireGameEvent(GameEventsTypes.CONNECT_TO_INSTANCE, {
 		nodeType = nodeType, 
 		folder = self.folder, 
-		args = {
-			cardData, boardData
-		}
+		args = {}
 	})
 end
 

@@ -23,7 +23,7 @@ function ClientChest.new(instanceFolder)
 end
 
 function ClientChest:bindDispatcher()
-	local dispatcher = self.sequenceDispatcher
+	local dispatcher = self._sequenceDispatcher
 	UiEventHandler.bind(dispatcher)
 end
 
@@ -35,7 +35,7 @@ function ClientChest:bindEvents()
 	local events = self.instanceFolder.Events
 	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
 		print(sequence)
-		self.sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
+		self._sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
 	end)
 end 
 

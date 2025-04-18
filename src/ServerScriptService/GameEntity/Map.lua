@@ -71,7 +71,6 @@ function Map:serializeNodes()
 	local serializedNodes = {}
 	for y = 1, Constants.MAP_SETTINGS.TOTAL_DEPTH do
 		local nodes = self.nodeGrid[y]
-		local width = #nodes
 		serializedNodes[y] = {}
 		for x, node in ipairs(nodes) do
 			local serializedNode = node:serialize()
@@ -115,7 +114,7 @@ function Map:generate(playerState)
 		if height == 1 then
 			width = 1
 		elseif height == 2 then
-			width = Constants.MAP_SETTINGS.STARTING_WIDTH
+			width = Constants.MAP_SETTINGS.MAX_STARTING_WIDTH
 		elseif height == Constants.MAP_SETTINGS.TOTAL_DEPTH - 2 then
 			excludedType = MapNodeTypes.REST
 		elseif height == Constants.MAP_SETTINGS.TOTAL_DEPTH - 1 then
@@ -138,8 +137,8 @@ function Map:generate(playerState)
 		end
 		if height == 1 then
 			local newNode = self:_createNode(
-				MapNodeTypes.REGULAR_ENEMY,
-				self:getNodeData(MapNodeTypes.REGULAR_ENEMY, 0, playerState),
+				MapNodeTypes.CHEST,
+				self:getNodeData(MapNodeTypes.CHEST, 0, playerState),
 				Vector2.new(1, 1)
 			)
 			lastNode = newNode
