@@ -40,6 +40,7 @@ function ShopManager:init(playerState)
 		local id = self.idGenerator:gen()
 		self.cardData[id] = {cardData = selectedCard, cost = cost, purchased = false, upgraded = false, id = id}
 	end
+	return self
 end
 
 function ShopManager:tryPurchase(id, playerState)
@@ -49,7 +50,7 @@ function ShopManager:tryPurchase(id, playerState)
 		if playerState:canAfford(cost) then --something feels like we shouldnt check the playerstate ehre but w.e
 			if not data.purchased then
 				data.purchased = true
-				return data, cost
+				return true, data, cost
 			else 
 				warn("Already purchased")
 			end
@@ -59,11 +60,7 @@ function ShopManager:tryPurchase(id, playerState)
 	else
 		warn("couldn't find card for id ".. id)
 	end
-	return nil
-end
-
-function ShopManager:purchase(id, playerState)
-	self.cardData[id].purchased = true
+	return false, nil, nil
 end
 
 --converts to a table of names and ids to send up to client

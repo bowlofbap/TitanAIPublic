@@ -18,7 +18,7 @@ return function()
 		
 		beforeEach(function()
 			MockedPlayer = Instance.new("Part")
-			MockedData = require(ReplicatedStorage.Repos.StarterRepos.Ze)
+			MockedData = require(ReplicatedStorage.Repos.StarterRepos.TestData)
 			MapNodeTypes = require(ReplicatedStorage.Enums.Entity.MapNodeTypes)
 			NodeInstanceFactory = require(ServerScriptService.NodeInstance.NodeInstanceFactory).new()
 			IdGenerator = require(ReplicatedStorage.Helpers.Classes.IdGenerator).new()
@@ -76,6 +76,33 @@ return function()
 			expect(CurrentInstance.cardRewardClaimed).to.equal(false)
 			local reward = CurrentInstance.rewardsHandler:serializeRewards()[1]
 			expect(CurrentInstance:openReward({id = reward.id})).to.equal(true)
+		end)
+
+		it("Confirms ShopInstance is initalized correctly", function()
+			local CurrentMapNodeType = MapNodeTypes.SHOP
+			dependencies = {
+				mapNodeType = CurrentMapNodeType, 
+				robloxPlayer = MockedPlayer, 
+				playerState = PlayerState, 
+				deckManager = DeckManager,
+				deckData = DeckManager:getPlayableDeck(),
+				echoManager = EchoManager, 
+				parent = workspace, 
+				centerPosition = MockedPosition, 
+				idGenerator = IdGenerator, 
+				eventObserver = EventObserver,
+			}
+			PlayerState:updateMoney(1000)
+			local previousMoney = PlayerState:getMoney()
+			CurrentInstance = NodeInstanceFactory:createInstance(CurrentMapNodeType, dependencies)
+			CurrentInstance:start()
+			local serializedShopManager = CurrentInstance.shopManager:serialize()
+			local id, cardData = next(serializedShopManager)
+			expect(serializedShopManager).to.be.a(table)
+			local success, purchasedCardData, cost = CurrentInstance:requestPurchase({id = id})
+			expect(success).to.equal(true)
+			expect(cardData).to.equal(purchasedCardData)
+			expect(PlayerState:getMoney()).to.equal(previousMoney - cost)
 		end)
 	end)
 end

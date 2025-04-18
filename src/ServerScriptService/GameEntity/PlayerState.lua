@@ -53,6 +53,10 @@ function PlayerState:spendMoney(cost)
 	self.money-=cost
 end
 
+function PlayerState:getMoney()
+	return self.money
+end
+
 function PlayerState:updateMoney(moneyChange)
 	self.money += moneyChange
 	if self.money < 0 then
