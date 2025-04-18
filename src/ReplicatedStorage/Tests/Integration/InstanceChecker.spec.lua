@@ -75,7 +75,7 @@ return function()
 			CurrentInstance:start()
 			expect(CurrentInstance.cardRewardClaimed).to.equal(false)
 			local reward = CurrentInstance.rewardsHandler:serializeRewards()[1]
-			expect(CurrentInstance:openReward({id = reward.id}).to.equal(true))
+			expect(CurrentInstance:openReward({id = reward.id})).to.equal(true)
 		end)
 	end)
 end
