@@ -56,8 +56,11 @@ end
 
 function StateSyncBuffer:flush()
 	if #self._sequence == 0 then return end
-
-	self._event:FireClient(self._player, self._sequence)
+	if self._player.ClassName == "Player" then
+		self._event:FireClient(self._player, self._sequence)
+	else
+		print("Mocking out player call for flush")
+	end
 	self._sequence = {}
 	self._currentStep = nil
 end
