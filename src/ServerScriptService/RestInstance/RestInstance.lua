@@ -19,6 +19,7 @@ function RestInstance.new(dependencies)
 	local self = NodeInstance.new(dependencies)
 	setmetatable(self, RestInstance)
 	self.robloxPlayer = dependencies.robloxPlayer
+	self.stateSyncBuffer = StateSyncBuffer.new(dependencies.robloxPlayer, self.folder.Events.ToClient.GameSyncEvent)
 	self._used = false
 	self:connectEvents()
 	return self
