@@ -1,10 +1,11 @@
-local localPlayer = game:GetService("Players").LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Classes = ReplicatedStorage.Client.Classes
 
 local GuiEvent = game:GetService("ReplicatedStorage").Client.BindableEvents.GuiEvent
+local Model = ReplicatedStorage.Models.NodeInstances.Rest
 
-local UiActions = require(game:GetService("ReplicatedStorage").Enums.Rest.UiActions)
-local ClientEvents = require(game:GetService("ReplicatedStorage").Enums.ClientEvents)
-
+local UiEventHandler = require(Classes.ClientShopModules.UiEventHandler)
+local SequenceDispatcher = require(Classes.SequenceDispatcher)
 local ClientNodeInstance = require(game:GetService("ReplicatedStorage").Client.Classes.ClientNode.ClientNodeInstance)
 
 local ClientRest = setmetatable({}, {__index = ClientNodeInstance})
@@ -15,20 +16,27 @@ function ClientRest.new(instanceFolder)
 	setmetatable(self, ClientRest)
 	self._upgradeableCardData = nil
 	self.isUseable = true
+	self._sequenceDispatcher = SequenceDispatcher.new()
+	self:initModel(Model, instanceFolder)
+	self:bindDispatcher()
 	self:bindEvents()
 	return self
 end
 
+function ClientRest:bindDispatcher()
+	local dispatcher = self._sequenceDispatcher
+	UiEventHandler.bind(dispatcher)
+end
+
+function ClientRest:getCameraSubject()
+	return self._model
+end
+
 function ClientRest:bindEvents()
 	local events = self.instanceFolder.Events
-	events.ToClient.GameUiEvent.OnClientEvent:Connect(function(uiAction, data)
-		if uiAction == UiActions.SHOW_GUI then
-			self._upgradeableCardData = data.upgradeableCardData
-			GuiEvent:Fire("RestGui", "show")
-		elseif uiAction == UiActions.USE_INSTANCE then
-			self.isUseable = false
-			GuiEvent:Fire("RestGui", "disable")
-		end
+	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
+		print(sequence)
+		self._sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
 	end)
 end 
 
