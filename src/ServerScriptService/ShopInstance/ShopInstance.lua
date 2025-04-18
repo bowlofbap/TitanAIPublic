@@ -1,14 +1,15 @@
-local ShopManager = require(game:GetService("ServerScriptService").ShopInstance.ShopManager)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local Constants = require(game:GetService("ReplicatedStorage").Helpers.Constants)
+local ShopManager = require(ServerScriptService.ShopInstance.ShopManager)
+local StateSyncBuffer = require(ServerScriptService.General.StateSyncBuffer)
+local StateUpdate = require(ServerScriptService.General.StateUpdate)
 
-local ShopModel = game:GetService("ReplicatedStorage").Models.NodeInstances.Shop
+local UiActions = require(ReplicatedStorage.Enums.Shop.UiActions)
+local GameActions = require(ReplicatedStorage.Enums.Shop.GameActions)
+local GameEventsTypes = require(ReplicatedStorage.Enums.GameEvents)
 
-local UiActions = require(game:GetService("ReplicatedStorage").Enums.Shop.UiActions)
-local GameActions = require(game:GetService("ReplicatedStorage").Enums.Shop.GameActions)
-local GameEventsTypes = require(game:GetService("ReplicatedStorage").Enums.GameEvents)
-
-local NodeInstance = require(game:GetService("ServerScriptService").NodeInstance.NodeInstance)
+local NodeInstance = require(ServerScriptService.NodeInstance.NodeInstance)
 local ShopInstance = {}
 ShopInstance.__index = ShopInstance
 setmetatable(ShopInstance, {__index = NodeInstance}) 
@@ -16,18 +17,15 @@ setmetatable(ShopInstance, {__index = NodeInstance})
 function ShopInstance.new(dependencies)
 	local self = NodeInstance.new(dependencies)
 	setmetatable(self, ShopInstance)
-	self.model = ShopModel:Clone()
-	self.model:SetPrimaryPartCFrame(CFrame.new(dependencies.centerPosition))
-	self.model.Parent = self.folder
 	self.playerState = dependencies.playerState
 	self.shopManager = ShopManager.new(dependencies.playerState, dependencies.idGenerator)
+	self.stateSyncBuffer = StateSyncBuffer.new(dependencies.robloxPlayer, self.folder.Events.ToClient.GameSyncEvent)
 	self.robloxPlayer = dependencies.robloxPlayer
 	self:connectEvents()
 	return self
 end
 
 function ShopInstance:connectEvents()
-	local gameFunctions = self.folder.Functions
 	local gameEvents = self.folder.Events
 
 	local c1 = gameEvents.ToServer.GameActionRequest.OnServerEvent:Connect(function(robloxPlayer, action, data) --may change to just generic data, action parameters...
@@ -35,15 +33,21 @@ function ShopInstance:connectEvents()
 		if action == GameActions.REQUEST_END_GAME then
 			self:fireGameEvent(GameEventsTypes.FINISH_INSTANCE, self)
 		elseif action == GameActions.REQUEST_PURCHASE then
-			local purchaseId = data.id
-			local cardData, cost = self.shopManager:tryPurchase(purchaseId, self.playerState)
-			if cardData then
-				self.playerState:spendMoney(cost)
-				self:fireGameEvent(GameEventsTypes.ADD_CARD, cardData)
-				self:updateClientUi(UiActions.PURCHASED_CARD, {id = purchaseId})
-			end
+			self:requestPurchase(data)
 		end
 	end)
+end
+
+function ShopInstance:requestPurchase(data)
+	local purchaseId = data.id
+	local success, cardData, cost = self.shopManager:tryPurchase(purchaseId, self.playerState)
+	if success then
+		self.playerState:spendMoney(cost)
+		self:fireGameEvent(GameEventsTypes.ADD_CARD, cardData)
+		self.stateSyncBuffer:add(StateUpdate.new(UiActions.PURCHASED_CARD, {id = purchaseId}))
+		self.stateSyncBuffer:flush()
+	end
+	return success, cardData, cost
 end
 
 function ShopInstance:getCameraSubject()
@@ -51,13 +55,19 @@ function ShopInstance:getCameraSubject()
 end
 
 function ShopInstance:start()
-	local shopData = self.shopManager:serialize()
-	self:updateClientUi(UiActions.SHOW_GUI, "ShopGui")
+	self.stateSyncBuffer:add(StateUpdate.new(UiActions.SHOW_GUI, {guiName = "ShopGui"}))
+	self.stateSyncBuffer:flush()
 end
 
 function ShopInstance:connectPlayerToInstance(nodeType)
 	local shopData = self.shopManager:serialize()
-	ConnectToGame:FireClient(self.robloxPlayer, nodeType, self.folder, {cardData = shopData}) --send the data in a sorted format for the deck
+	self:fireGameEvent(GameEventsTypes.CONNECT_TO_INSTANCE, {
+		nodeType = nodeType, 
+		folder = self.folder, 
+		args = {
+			cardData = shopData
+		}
+	})
 end
 
 return ShopInstance

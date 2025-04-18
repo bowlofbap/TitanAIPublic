@@ -19,7 +19,7 @@ function ClientBoard:_initNodes(serializedBoard, parent)
 	model.Name = "Nodes"
 	model.Parent = parent
 	self.model = model
-	local nodeSize = ClientBoardNode:getSize()
+	local nodeSize = ClientBoardNode.getSize()
 	local centerPosition = Constants.INSTANCE_SETTINGS.INSTANCE_POSITION
 	local gridWidth  = Constants.BOARD_SIZE.X 
 	local gridHeight = Constants.BOARD_SIZE.Y 
