@@ -3,7 +3,6 @@ local Classes = ReplicatedStorage.Client.Classes
 local GuiEvent = ReplicatedStorage.Client.BindableEvents.GuiEvent
 local Model = ReplicatedStorage.Models.NodeInstances.Chest
 
-
 local ClientNodeInstance = require(Classes.ClientNode.ClientNodeInstance)
 local SequenceDispatcher = require(Classes.SequenceDispatcher)
 local UiEventHandler = require(Classes.ClientChestModules.UiEventHandler)

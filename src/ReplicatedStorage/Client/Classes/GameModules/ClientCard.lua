@@ -292,6 +292,7 @@ function ClientCard:fadeOut(duration)
 	}
 	-- Create and play tweens
 	for _, guiObject in ipairs(targets) do
+		print(guiObject, tweenGoals[guiObject.ClassName])
 		local tween = TweenService:Create(guiObject, tweenInfo, tweenGoals[guiObject.ClassName])
 
 		tween.Completed:Connect(handleTweenCompletion)

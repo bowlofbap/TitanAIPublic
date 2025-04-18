@@ -5,7 +5,8 @@ local GuiEvent = ReplicatedStorage.Client.BindableEvents.GuiEvent
 local Model = ReplicatedStorage.Models.NodeInstances.Shop
 
 local ClientNodeInstance = require(Classes.ClientNode.ClientNodeInstance)
-local UiEventHandler = require(Classes.ClientChestModules.UiEventHandler)
+local UiEventHandler = require(Classes.ClientShopModules.UiEventHandler)
+local SequenceDispatcher = require(Classes.SequenceDispatcher)
 
 local ClientShop = setmetatable({}, {__index = ClientNodeInstance})
 ClientShop.__index = ClientShop
@@ -15,7 +16,7 @@ function ClientShop.new(instanceFolder, shopData)
 	setmetatable(self, ClientShop)
 	self._shopData = shopData
 	self:initModel(Model, instanceFolder)
-	GuiEvent:Fire("ShopGui", "loadData", shopData)
+	self._sequenceDispatcher = SequenceDispatcher.new()
 	self:bindDispatcher()
 	self:bindEvents()
 	return self

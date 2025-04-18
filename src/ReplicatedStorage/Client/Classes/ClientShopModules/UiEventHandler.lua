@@ -7,7 +7,7 @@ local UiEventDispatcher = {}
 
 function UiEventDispatcher.bind(dispatcher)
 	dispatcher:register(UiActions.SHOW_GUI, function(data, context)
-		context.guiEvent:Fire(data.guiName, "show")
+		context.guiEvent:Fire(data.guiName, "show", context.instance._shopData)
 	end)
 
 	dispatcher:register(UiActions.PURCHASED_CARD, function(data, context)

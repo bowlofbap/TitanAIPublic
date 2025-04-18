@@ -42,7 +42,7 @@ function ShopInstance:requestPurchase(data)
 	local purchaseId = data.id
 	local success, cardData, cost = self.shopManager:tryPurchase(purchaseId, self.playerState)
 	if success then
-		self.playerState:spendMoney(cost)
+		self:fireGameEvent(GameEventsTypes.CHANGE_MONEY, {moneyChange = cost * -1})
 		self:fireGameEvent(GameEventsTypes.ADD_CARD, cardData)
 		self.stateSyncBuffer:add(StateUpdate.new(UiActions.PURCHASED_CARD, {id = purchaseId}))
 		self.stateSyncBuffer:flush()

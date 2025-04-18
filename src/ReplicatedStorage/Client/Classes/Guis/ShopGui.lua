@@ -41,7 +41,7 @@ end
 
 function ShopGui:loadData(shopData)
 	local shopFrame = self.object.ContainerFrame.ShopFrame
-	local shopData = shopData.cardData
+	print(shopData)
 	local numCards = #shopData
 	if numCards == 0 then return end
 	for _, data in ipairs(shopData) do
@@ -96,6 +96,7 @@ function ShopGui:reset()
 end
 
 function ShopGui:show(data)
+	self:loadData(data)
 	self.object.Enabled = true
 end
 
