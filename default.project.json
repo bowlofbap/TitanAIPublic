@@ -34,6 +34,12 @@
       },
       "ServerScriptService": {
             "$path": "src/ServerScriptService"
+      },
+      "StarterGui": {
+        "$className": "StarterGui",
+        "PC": {
+            "$path": "src/StarterGui/PC"
+        }
       }
     }
   }
