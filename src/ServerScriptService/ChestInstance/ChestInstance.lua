@@ -74,11 +74,6 @@ function ChestInstance:start()
 end
 
 function ChestInstance:connectPlayerToInstance(nodeType)
-	self:fireGameEvent(GameEventsTypes.CONNECT_TO_INSTANCE, {
-		nodeType = nodeType, 
-		folder = self.folder, 
-		args = {}
-	})
 end
 
 return ChestInstance

@@ -65,7 +65,7 @@ function ShopInstance:connectPlayerToInstance(nodeType)
 		nodeType = nodeType, 
 		folder = self.folder, 
 		args = {
-			cardData = shopData
+			shopData
 		}
 	})
 end
