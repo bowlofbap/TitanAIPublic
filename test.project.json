@@ -19,6 +19,9 @@
               }
         },
         "$className": "ReplicatedStorage",
+        "TestRunner":{
+            "$path": "src/ReplicatedStorage/TestRunner.lua"
+        },
         "Client": {
             "$path": "src/ReplicatedStorage/Client"
         },
