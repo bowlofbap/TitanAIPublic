@@ -15,7 +15,7 @@ local Level1 = {
 				RewardTypes.ECHO_COMMON
 			}
 		},
-	}
+	},
 	tier1 = {
 		{
 			units = {
