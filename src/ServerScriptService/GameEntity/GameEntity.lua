@@ -149,6 +149,7 @@ end
 
 function GameEntity:updateClientUiWithUpdates(updates)
 	self.stateSyncBuffer:addStep(true, updates)
+	self.stateSyncBuffer:flush()
 end
 
 function GameEntity:subscribeToObserver(observer)
@@ -219,7 +220,7 @@ function GameEntity:subscribeToObserver(observer)
 		local upgradedCard = self.deckManager:upgradeCardById(data.cardId):serialize()
 		self:updateClientUiWithUpdates({
 			StateUpdate.new(EntityUIActions.UPGRADE_CARD, {unupgradedCard = unupgradedCard, upgradedCard = upgradedCard}),
-			EntityUIActions.UPDATE_PLAYER_DECK, {deck = self.deckManager:serialize()}
+			StateUpdate.new(EntityUIActions.UPDATE_PLAYER_DECK, {deck = self.deckManager:serialize()})
 		})
 	end)
 	

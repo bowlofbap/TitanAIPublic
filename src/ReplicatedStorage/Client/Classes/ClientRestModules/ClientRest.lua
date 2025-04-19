@@ -4,7 +4,7 @@ local Classes = ReplicatedStorage.Client.Classes
 local GuiEvent = game:GetService("ReplicatedStorage").Client.BindableEvents.GuiEvent
 local Model = ReplicatedStorage.Models.NodeInstances.Rest
 
-local UiEventHandler = require(Classes.ClientShopModules.UiEventHandler)
+local UiEventHandler = require(Classes.ClientRestModules.UiEventHandler)
 local SequenceDispatcher = require(Classes.SequenceDispatcher)
 local ClientNodeInstance = require(game:GetService("ReplicatedStorage").Client.Classes.ClientNode.ClientNodeInstance)
 
