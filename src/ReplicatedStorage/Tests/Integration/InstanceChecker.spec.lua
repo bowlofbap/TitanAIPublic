@@ -33,6 +33,11 @@ return function()
 			MockedPosition = Vector3.new(0,0,0)
 		end)
 
+		afterEach(function()
+			CurrentInstance:Destroy()
+			CurrentInstance = nil
+		end)
+
 		it("Confirms that GameInstance is initialized correctly", function()
 			local CurrentMapNodeType = MapNodeTypes.REGULAR_ENEMY
 			MockedStageData = require(ReplicatedStorage.Stages.Level1).test[1]
