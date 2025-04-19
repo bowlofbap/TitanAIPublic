@@ -9,6 +9,7 @@ on:
     branches: 
         - production
         - test
+        - 'feat/**'
 
 jobs:
   install-tools:
@@ -55,12 +56,34 @@ jobs:
       - name: Make test.sh executable
         run: chmod +x ./scripts/shell/test.sh
       - name: Run tests
-        run: ./scripts/shell/test.sh test.project.json $TEST_TASK_FILE
+        run: ./scripts/shell/test.sh test.project.json $TEST_TASK_FILE | tee test_output.log
         env:
           ROBLOX_API_KEY: ${{ secrets.TESTKEY }}
           ROBLOX_UNIVERSE_ID: ${{ vars.ROBLOX_TEST_UNIVERSE_ID }}
           ROBLOX_PLACE_ID: ${{ vars.ROBLOX_TEST_PLACE_ID }}
           TEST_TASK_FILE: tasks/runTests.luau
+      - name: Extract test JSON
+        id: extract_json
+        run: |
+          OUTPUT=$(grep "::TEST_JSON::" test_output.log | sed 's/.*::TEST_JSON:://')
+          echo "$OUTPUT" > test-results.json
+          echo "json_output=$OUTPUT" >> $GITHUB_OUTPUT
+      - name: Convert test results to JUnit XML
+        run: python3 ./scripts/shell/python/convert_to_junit.py test-results.json test-results.xml
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: roblox-test-results
+          path: |
+            test-results.json
+            test-results.xml
+      - name: Upload test results
+        uses: dorny/test-reporter@v2
+        with:
+          name: roblox-test-results 
+          path: test-results.xml 
+          reporter: jest-junit      
+
 
   deployment:
     name: Deployment
