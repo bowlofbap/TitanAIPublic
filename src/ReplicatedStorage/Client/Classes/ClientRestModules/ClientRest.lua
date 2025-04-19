@@ -18,27 +18,14 @@ function ClientRest.new(instanceFolder)
 	self.isUseable = true
 	self._sequenceDispatcher = SequenceDispatcher.new()
 	self:initModel(Model, instanceFolder)
-	self:bindDispatcher()
+	self:bindDispatcher(UiEventHandler)
 	self:bindEvents()
 	return self
-end
-
-function ClientRest:bindDispatcher()
-	local dispatcher = self._sequenceDispatcher
-	UiEventHandler.bind(dispatcher)
 end
 
 function ClientRest:getCameraSubject()
 	return self._model
 end
-
-function ClientRest:bindEvents()
-	local events = self.instanceFolder.Events
-	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
-		print(sequence)
-		self._sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
-	end)
-end 
 
 function ClientRest:getUpgradeableCardData()
 	return self._upgradeableCardData

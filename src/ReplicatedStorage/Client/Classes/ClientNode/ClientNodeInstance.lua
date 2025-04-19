@@ -1,13 +1,31 @@
-local Constants = require(game:GetService("ReplicatedStorage").Helpers.Constants)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Classes = ReplicatedStorage.Client.Classes
+
+local Constants = require(ReplicatedStorage.Helpers.Constants)
+local SequenceDispatcher = require(Classes.SequenceDispatcher)
 
 local ClientNodeInstance = {}
 ClientNodeInstance.__index = ClientNodeInstance
 
 function ClientNodeInstance.new(instanceFolder)
 	local self = setmetatable({}, ClientNodeInstance)
+	self._sequenceDispatcher = SequenceDispatcher.new()
 	self.instanceFolder = instanceFolder
 	return self
 end
+
+function ClientNodeInstance:bindDispatcher(eventHandler)
+	local dispatcher = self._sequenceDispatcher
+	eventHandler.bind(dispatcher)
+end
+
+function ClientNodeInstance:bindEvents()
+	local events = self.instanceFolder.Events
+	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
+		print(sequence)
+		self._sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
+	end)
+end 
 
 function ClientNodeInstance:destroy()
 	setmetatable(self, nil)

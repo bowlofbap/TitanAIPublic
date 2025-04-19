@@ -17,26 +17,13 @@ function ClientShop.new(instanceFolder, shopData)
 	self._shopData = shopData
 	self:initModel(Model, instanceFolder)
 	self._sequenceDispatcher = SequenceDispatcher.new()
-	self:bindDispatcher()
+	self:bindDispatcher(UiEventHandler)
 	self:bindEvents()
 	return self
-end
-
-function ClientShop:bindDispatcher()
-	local dispatcher = self._sequenceDispatcher
-	UiEventHandler.bind(dispatcher)
 end
 
 function ClientShop:getCameraSubject()
 	return self._model
 end
-
-function ClientShop:bindEvents()
-	local events = self.instanceFolder.Events
-	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
-		print(sequence)
-		self._sequenceDispatcher:enqueue(sequence, {instance = self, guiEvent = GuiEvent})
-	end)
-end 
 
 return ClientShop

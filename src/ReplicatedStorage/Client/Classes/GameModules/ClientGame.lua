@@ -44,7 +44,7 @@ function ClientGame.new(instanceFolder, deckData, boardData)
 	self.isPaused.Value = false
 	self.isPlaying = Instance.new("BoolValue")
 	self.isPlaying.Value = true
-	self:bindDispatcher()
+	self:bindDispatcher(UiEventHandler)
 	self:bindEvents()
 	return self
 end
@@ -55,11 +55,6 @@ end
 
 function ClientGame:getCameraSubject()
 	return self.clientBoard.model
-end
-
-function ClientGame:bindDispatcher()
-	local dispatcher = self.sequenceDispatcher
-	UiEventHandler.bind(dispatcher)
 end
 
 function ClientGame:bindEvents()
