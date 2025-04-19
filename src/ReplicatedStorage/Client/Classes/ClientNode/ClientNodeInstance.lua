@@ -3,6 +3,7 @@ local Classes = ReplicatedStorage.Client.Classes
 
 local Constants = require(ReplicatedStorage.Helpers.Constants)
 local SequenceDispatcher = require(Classes.SequenceDispatcher)
+local GuiEvent = ReplicatedStorage.Client.BindableEvents.GuiEvent
 
 local ClientNodeInstance = {}
 ClientNodeInstance.__index = ClientNodeInstance
