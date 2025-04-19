@@ -34,6 +34,7 @@ return function()
 		end)
 
 		afterEach(function()
+			print("teardown instance")
 			CurrentInstance:Destroy()
 			CurrentInstance = nil
 		end)
