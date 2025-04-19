@@ -9,6 +9,7 @@ on:
     branches: 
         - production
         - test
+        - 'feat/**'
 
 jobs:
   install-tools:
