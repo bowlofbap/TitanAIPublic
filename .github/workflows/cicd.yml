@@ -82,6 +82,8 @@ jobs:
         with:
           name: roblox-test-results 
           path: test-results.xml 
+          reporter: jest-junit      
+
 
   deployment:
     name: Deployment
