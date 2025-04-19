@@ -39,7 +39,37 @@
             }
       },
       "ServerScriptService": {
-            "$path": "src/ServerScriptService"
+        "$className": "ServerScriptService",
+        "ChestInstance":{
+            "$path": "src/ServerScriptService/ChestInstance"
+        },
+        "EventInstance":{
+            "$path": "src/ServerScriptService/EventInstance"
+        },
+        "GameEntity":{
+            "$path": "src/ServerScriptService/GameEntity"
+        },
+        "GameInstance":{
+            "$path": "src/ServerScriptService/GameInstance"
+        },
+        "General":{
+            "$path": "src/ServerScriptService/General"
+        },
+        "NodeInstance":{
+            "$path": "src/ServerScriptService/NodeInstance"
+        },
+        "RestInstance":{
+            "$path": "src/ServerScriptService/RestInstance"
+        },
+        "ShopInstance":{
+            "$path": "src/ServerScriptService/ShopInstance"
+        },
+        "GameLoader": {
+            "$path": "src/ServerScriptService/GameLoader.server.lua"
+        },
+        "LoadScript": {
+            "$path": "src/ServerScriptService/LoadScript.server.lua"
+        }
       },
       "StarterGui": {
         "$className": "StarterGui",
