@@ -2,6 +2,12 @@
     "name": "TitanAI",
     "tree": {
       "$className": "DataModel",
+      "Players": {
+        "$className": "Players",
+        "$properties": {
+          "CharacterAutoLoads": false
+        }
+      },
       "ReplicatedStorage": {
         "$className": "ReplicatedStorage",
         "Client": {
