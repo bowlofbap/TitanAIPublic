@@ -79,9 +79,10 @@ jobs:
             test-results.xml
       - name: Summarize test results
         run: |
-          PASSED=$(jq '[.[] | select(.success == true)] | length' test-results.json)
-          FAILED=$(jq '[.[] | select(.success == false)] | length' test-results.json)
-          TOTAL=$(jq 'length' test-results.json)
+          # Adjust the path to handle the nested structure
+          PASSED=$(jq '[.planNode.children[].children[].children[].children[].children[] | select(.type == "It" and .status == "Success")] | length' test-results.json)
+          FAILED=$(jq '[.planNode.children[].children[].children[].children[].children[] | select(.type == "It" and .status == "Failure")] | length' test-results.json)
+          TOTAL=$(jq '[.planNode.children[].children[].children[].children[].children[] | select(.type == "It")] | length' test-results.json)
 
           echo "## Roblox TestEZ Results ✅❌" >> $GITHUB_STEP_SUMMARY
           echo "**Total:** $TOTAL" >> $GITHUB_STEP_SUMMARY
