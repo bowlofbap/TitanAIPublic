@@ -19,7 +19,7 @@ function Factory.new()
 	return self
 end
 
-function Factory:createInstance(mapNodeType, dependencies)
+function Factory:createInstance(mapNodeType, dependencies, force)
 	if mapNodeType == MapNodeTypes.REGULAR_ENEMY or mapNodeType == MapNodeTypes.ELITE_ENEMY or mapNodeType == MapNodeTypes.BOSS_ENEMY then
 		return GameInstance.new(dependencies)
 	elseif mapNodeType == MapNodeTypes.SHOP then

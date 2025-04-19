@@ -137,8 +137,8 @@ function Map:generate(playerState)
 		end
 		if height == 1 then
 			local newNode = self:_createNode(
-				MapNodeTypes.REST,
-				self:getNodeData(MapNodeTypes.REST, 0, playerState),
+				MapNodeTypes.EVENT,
+				self:getNodeData(MapNodeTypes.EVENT, 0, playerState),
 				Vector2.new(1, 1)
 			)
 			lastNode = newNode
@@ -148,7 +148,7 @@ function Map:generate(playerState)
 			local startingWidth = math.random(Constants.MAP_SETTINGS.MIN_STARTING_WIDTH, Constants.MAP_SETTINGS.MAX_STARTING_WIDTH)
 			for i = 1, startingWidth do
 				local coordinate = Vector2.new(1, height)
-				local newNode = self:_createChild(self.root, MapNodeTypes.REGULAR_ENEMY, coordinate, playerState)
+				local newNode = self:_createChild(self.root, MapNodeTypes.EVENT, coordinate, playerState)
 				table.insert(frontier, newNode)
 				lastNode = newNode
 			end

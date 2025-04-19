@@ -135,5 +135,32 @@ return function()
 			expect(rested).to.equal(true)
 			expect(CurrentInstance._used).to.equal(true)
 		end)
+
+		it("Confirms EventInstance is initalized correctly", function()
+			local EventInstance = require(ServerScriptService.EventInstance.EventInstance)
+			local rested = false
+			EventObserver:subscribeTo(GameEvents.PLAYER_HEALTH_HURT_HEAL, function(value)
+				rested = true
+			end)
+			local eventId = "e1"
+			MockedStageData = require(ServerScriptService.EventInstance.BaseEvent).new(eventId)
+			local CurrentMapNodeType = MapNodeTypes.REST
+			dependencies = {
+				mapNodeType = CurrentMapNodeType, 
+				robloxPlayer = MockedPlayer, 
+				playerState = PlayerState, 
+				deckManager = DeckManager,
+				deckData = DeckManager:getPlayableDeck(),
+				echoManager = EchoManager, 
+				parent = workspace, 
+				stageData = MockedStageData, 
+				centerPosition = MockedPosition, 
+				idGenerator = IdGenerator, 
+				eventObserver = EventObserver,
+			}
+			CurrentInstance = EventInstance.new(dependencies)
+			CurrentInstance:start()
+			expect(CurrentInstance.currentEvent.eventKey).to.equal(eventId)
+		end)
 	end)
 end
