@@ -4,7 +4,6 @@ return function()
 		local ServerScriptService = game:GetService("ServerScriptService")
 		local EventContext = require(ServerScriptService.EventInstance.EventContext)
 		local EventsRepo = require(ReplicatedStorage.Repos.EventsFolder.EventsRepo)
-		local GameEvents = require(ReplicatedStorage.Enums.GameEvents)
 		local MockedPlayer
 		local MockedData
 		local MapNodeTypes
@@ -12,7 +11,6 @@ return function()
 		local EventObserver
 		local PlayerState
 		local DeckManager
-		local CurrentInstance
 		local context 
 		
 		beforeEach(function()
@@ -50,5 +48,9 @@ return function()
 				end
 			end)
 		end
+
+		it("Is an example failing test", function()
+			expect(true).to.equal(false)
+		end)
 	end)
 end

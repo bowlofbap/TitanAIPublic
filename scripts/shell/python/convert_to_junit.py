@@ -11,12 +11,12 @@ def extract_tests(plan_node, result_node, path=None):
     current_path = path + [phrase]
 
     plan_children = plan_node.get("children", [])
-    result_children = result_node.get("children", [])
+    result_children = result_node.get("children", []) if result_node else []
 
     # If this is a test
     if plan_node.get("type") == "It":
-        success = result_node.get("status") == "Success"
-        errors = result_node.get("errors", [])
+        success = result_node.get("status", "") == "Success" if result_node else False
+        errors = result_node.get("errors", []) if result_node else []
         message = errors[0].get("message", "") if errors else ""
         trace = errors[0].get("trace", "") if errors else ""
 
@@ -28,8 +28,9 @@ def extract_tests(plan_node, result_node, path=None):
             "trace": trace
         })
 
-    # Recurse into children
-    for plan_child, result_child in zip(plan_children, result_children):
+    # Recurse into children safely
+    for i, plan_child in enumerate(plan_children):
+        result_child = result_children[i] if i < len(result_children) else {}
         tests.extend(extract_tests(plan_child, result_child, current_path))
 
     return tests
@@ -42,7 +43,8 @@ def to_junit(input_json_path, output_xml_path):
     result_children = data["children"]
 
     tests = []
-    for plan_node, result_node in zip(plan_children, result_children):
+    for i, plan_node in enumerate(plan_children):
+        result_node = result_children[i] if i < len(result_children) else {}
         tests.extend(extract_tests(plan_node, result_node))
 
     testsuites = ET.Element("testsuites")
