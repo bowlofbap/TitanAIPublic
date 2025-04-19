@@ -20,6 +20,10 @@ function EventGui.new(clientPlayer)
 end
 
 function EventGui:init()
+	repeat
+		wait() --hacky maybe...
+	until self.clientPlayer:getCurrentInstance()
+	--TODO: the cliententity doesnt have this instance set
 	local eventData = self.clientPlayer:getCurrentInstance():getEventData()
 	local mainFrame = self.object.MainFrame
 	mainFrame.NameFrame.NameLabel.Text = eventData.name

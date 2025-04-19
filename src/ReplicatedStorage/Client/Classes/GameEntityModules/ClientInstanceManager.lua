@@ -67,6 +67,7 @@ function ClientInstanceManager:connectToInstance(nodeType, instanceFolder, ...)
 		self._currentInstance = ClientRest.new(instanceFolder, ...)
 	elseif nodeType.label == MapNodeTypes.EVENT.label then
 		self._currentInstance = ClientEvent.new(instanceFolder, ...)
+		print("instance set")
 	else
 		warn("implementation for node hasn't be resolved", nodeType)
 	end

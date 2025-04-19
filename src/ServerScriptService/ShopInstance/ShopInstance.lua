@@ -28,7 +28,7 @@ end
 function ShopInstance:connectEvents()
 	local gameEvents = self.folder.Events
 
-	local c1 = gameEvents.ToServer.GameActionRequest.OnServerEvent:Connect(function(robloxPlayer, action, data) --may change to just generic data, action parameters...
+	gameEvents.ToServer.GameActionRequest.OnServerEvent:Connect(function(robloxPlayer, action, data) --may change to just generic data, action parameters...
 		if robloxPlayer ~= self.robloxPlayer then warn("invalid player sent data") return false end
 		if action == GameActions.REQUEST_END_GAME then
 			self:fireGameEvent(GameEventsTypes.FINISH_INSTANCE, self)
