@@ -17,7 +17,6 @@ local GuiFunction = ReplicatedStorage.Client.BindableFunctions.GuiFunction
 
 local UiActions = require(Enums.GameInstance.UiActions)
 local ClientEvents = require(Enums.ClientEvents)
-local GameDataRequests = require(Enums.GameDataRequests)
 local GameResults = require(Enums.GameResults)
 
 local ClientNodeInstance = require(Classes.ClientNode.ClientNodeInstance)
@@ -37,7 +36,6 @@ function ClientGame.new(instanceFolder, deckData, boardData)
 	self.playerHand = PlayerHand.new()
 	self.playerDiscard = PlayerDiscard.new()
 	self.clientUnitHolder = ClientUnitHolder.new(instanceFolder)
-	self.sequenceDispatcher = SequenceDispatcher.new()
 	
 	self._playerUnit = nil
 	self.isPaused = Instance.new("BoolValue") --is  used in cardselectiongui
@@ -61,7 +59,7 @@ function ClientGame:bindEvents()
 	local events = self.instanceFolder.Events
 	events.ToClient.GameSyncEvent.OnClientEvent:Connect(function(sequence)
 		print(sequence)
-		self.sequenceDispatcher:enqueue(sequence, {clientGame = self, guiEvent = GuiEvent})
+		self._sequenceDispatcher:enqueue(sequence, {clientGame = self, guiEvent = GuiEvent})
 	end)
 
 	--TODO: remove the GameUiEvent..?
