@@ -9,6 +9,7 @@
 *.rbxl.autosave
 *.rbxlx.autosave
 
+
 # === Studio Session Junk ===
 *.log
 *.tmp
@@ -47,3 +48,5 @@ package-lock.json
 # === Test Artifacts ===
 coverage/
 test-results/
+
+sourcemap.json
