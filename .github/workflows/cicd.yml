@@ -77,17 +77,11 @@ jobs:
           path: |
             test-results.json
             test-results.xml
-      - name: Summarize test results
-        run: |
-          # Adjust the path to handle the nested structure
-          PASSED=$(jq '[.planNode.children[].children[].children[].children[].children[] | select(.type == "It" and .status == "Success")] | length' test-results.json)
-          FAILED=$(jq '[.planNode.children[].children[].children[].children[].children[] | select(.type == "It" and .status == "Failure")] | length' test-results.json)
-          TOTAL=$(jq '[.planNode.children[].children[].children[].children[].children[] | select(.type == "It")] | length' test-results.json)
-
-          echo "## Roblox TestEZ Results ✅❌" >> $GITHUB_STEP_SUMMARY
-          echo "**Total:** $TOTAL" >> $GITHUB_STEP_SUMMARY
-          echo "**Passed:** $PASSED" >> $GITHUB_STEP_SUMMARY
-          echo "**Failed:** $FAILED" >> $GITHUB_STEP_SUMMARY
+      - name: Upload test results
+        uses: devops-infra/action-test-reporter@v1
+        with:
+          name: roblox-test-results 
+          path: test-results.xml 
 
   deployment:
     name: Deployment
