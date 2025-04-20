@@ -48,9 +48,5 @@ return function()
 				end
 			end)
 		end
-
-		it("Is an example failing test", function()
-			expect(true).to.equal(false)
-		end)
 	end)
 end
