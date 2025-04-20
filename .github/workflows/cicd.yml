@@ -67,7 +67,15 @@ jobs:
       - name: Extract test XML
         id: extract_xml
         run: |
-          OUTPUT=$(awk '/<\?xml version="1.0" encoding="UTF-8"\?>/ {flag=1} flag; /<\/testsuites>/ {print; exit}' test_output.log | head -n -1)
+          OUTPUT=$(awk '
+          /<\?xml version="1.0" encoding="UTF-8"\?>/ {flag=1}
+          flag {
+              print
+              if (/<\/testsuites>/) {
+                  exit
+              }
+          }
+          ' test_output.log)
           echo "$OUTPUT" > test-results.xml
           {
           echo "xml_output<<EOF"
