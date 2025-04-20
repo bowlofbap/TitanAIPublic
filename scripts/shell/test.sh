@@ -6,7 +6,7 @@ echo "🟡 Current working directory:"
  echo "📦 Listing top-level contents:"
  ls -al
  echo "📁 Checking Packages folder contents:"
- ls -al Packages || {
+ ls -al Packages/_Index || {
    echo "❌ Packages folder not found!"
    exit 1
  }
