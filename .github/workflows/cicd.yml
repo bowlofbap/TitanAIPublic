@@ -67,7 +67,7 @@ jobs:
       - name: Extract test XML
         id: extract_xml
         run: |
-          OUTPUT=$(grep "::TEST_XML::" test_output.log | sed 's/.*::TEST_XML:://')
+          OUTPUT=$(grep "<?xml version="1.0" encoding="UTF-8"?>" test_output.log | sed 's/.*<?xml version="1.0" encoding="UTF-8"?>//')
           echo "$OUTPUT" > test-results.xml
           echo "json_output=$OUTPUT" >> $GITHUB_OUTPUT
       - name: Upload test artifacts
