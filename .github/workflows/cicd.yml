@@ -62,14 +62,12 @@ jobs:
           ROBLOX_UNIVERSE_ID: ${{ vars.ROBLOX_TEST_UNIVERSE_ID }}
           ROBLOX_PLACE_ID: ${{ vars.ROBLOX_TEST_PLACE_ID }}
           TEST_TASK_FILE: tasks/runTests.luau
-      - name: Extract test JSON
-        id: extract_json
+      - name: Extract test XML
+        id: extract_xml
         run: |
-          OUTPUT=$(grep "::TEST_JSON::" test_output.log | sed 's/.*::TEST_JSON:://')
-          echo "$OUTPUT" > test-results.json
+          OUTPUT=$(grep "::TEST_XML::" test_output.log | sed 's/.*::TEST_XML:://')
+          echo "$OUTPUT" > test-results.xml
           echo "json_output=$OUTPUT" >> $GITHUB_OUTPUT
-      - name: Convert test results to JUnit XML
-        run: python3 ./scripts/shell/python/convert_to_junit.py test-results.json test-results.xml
       - name: Upload test artifacts
         uses: actions/upload-artifact@v4
         with:
