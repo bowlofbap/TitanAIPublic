@@ -32,8 +32,6 @@ jobs:
         with:
           path: Packages
           key: packages-${{ hashFiles('wally.lock') }}
-      - name: Debug installed Wally packages
-        run: ls -lR Packages/_Index
 
   luau-tests:
     name: Run Luau tests via Open Cloud
@@ -55,6 +53,8 @@ jobs:
         with:
           path: Packages
           key: packages-${{ hashFiles('wally.lock') }}
+      - name: Debug installed Wally packages
+        run: ls -lR Packages/_Index
       - name: Make test.sh executable
         run: chmod +x ./scripts/shell/test.sh
       - name: Run tests
