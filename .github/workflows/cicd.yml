@@ -87,8 +87,8 @@ jobs:
         with:
           name: roblox-test-results
           path: |
-            test-results.json
             test-results.xml
+            dist.rbxl
       - name: Upload test results
         uses: dorny/test-reporter@v2
         with:
