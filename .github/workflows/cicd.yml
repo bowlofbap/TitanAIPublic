@@ -32,6 +32,8 @@ jobs:
         with:
           path: Packages
           key: packages-${{ hashFiles('wally.lock') }}
+      - name: Debug installed Wally packages
+        run: ls -lR Packages/_Index
 
   luau-tests:
     name: Run Luau tests via Open Cloud
