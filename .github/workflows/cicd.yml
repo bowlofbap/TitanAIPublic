@@ -67,7 +67,7 @@ jobs:
       - name: Extract test XML
         id: extract_xml
         run: |
-          OUTPUT=$(grep -A999 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" test_output.log | sed '1s/^.*\(<?xml version="1.0" encoding="UTF-8"?>\)/\1/')
+          OUTPUT=$(awk '/<\?xml version="1.0" encoding="UTF-8"\?>/ {found=1} found' test_output.log)
           echo "$OUTPUT" > test-results.xml
           echo "xml_output=$OUTPUT" >> $GITHUB_OUTPUT
       - name: Upload test artifacts
