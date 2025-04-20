@@ -3,35 +3,30 @@ import json
 import xml.etree.ElementTree as ET
 import sys
 
-def extract_tests(plan_node, result_node, path=None):
+def extract_tests(node, path=None):
     path = path or []
     tests = []
 
-    phrase = plan_node.get("phrase", "Unnamed")
-    current_path = path + [phrase]
+    name = node.get("name", "Unnamed")
+    node_type = node.get("type")
+    current_path = path + [name]
 
-    plan_children = plan_node.get("children", [])
-    result_children = result_node.get("children", []) if result_node else []
-
-    # If this is a test
-    if plan_node.get("type") == "It":
-        success = result_node.get("status", "") == "Success" if result_node else False
-        errors = result_node.get("errors", []) if result_node else []
+    if node_type == "It":
+        success = node.get("status") == "Success"
+        errors = node.get("errors", [])
         message = errors[0].get("message", "") if errors else ""
         trace = errors[0].get("trace", "") if errors else ""
 
         tests.append({
             "classname": ".".join(current_path[:-1]) or "Unnamed",
-            "name": phrase,
+            "name": name,
             "success": success,
             "message": message,
             "trace": trace
         })
 
-    # Recurse into children safely
-    for i, plan_child in enumerate(plan_children):
-        result_child = result_children[i] if i < len(result_children) else {}
-        tests.extend(extract_tests(plan_child, result_child, current_path))
+    for child in node.get("children", []):
+        tests.extend(extract_tests(child, current_path))
 
     return tests
 
@@ -39,13 +34,8 @@ def to_junit(input_json_path, output_xml_path):
     with open(input_json_path) as f:
         data = json.load(f)
 
-    plan_children = data["planNode"]["children"]
-    result_children = data["children"]
-
-    tests = []
-    for i, plan_node in enumerate(plan_children):
-        result_node = result_children[i] if i < len(result_children) else {}
-        tests.extend(extract_tests(plan_node, result_node))
+    root_node = data.get("root", {})
+    tests = extract_tests(root_node)
 
     testsuites = ET.Element("testsuites")
     testsuite = ET.SubElement(
