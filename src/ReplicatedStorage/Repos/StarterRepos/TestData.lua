@@ -4,7 +4,7 @@ local c = require(game:GetService("ReplicatedStorage").Repos.CardRepo)
 local testDeck = {
 	{
 		cardName = c.TileChange.key,
-		amount = 1,
+		amount = 5,
 		upgraded = false
 	},
 }

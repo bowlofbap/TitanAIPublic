@@ -55,10 +55,12 @@ local eventsMap = {
 				end,
 				execute = function(context)
 					local unupgradedCards = context.deckManager:getUpgradeableCardData()
-					local data1, data2 = Tables.selectTwoRandomElements(unupgradedCards)
-					context.eventObserver:emit(GameEvents.PLAYER_HEALTH_HURT_HEAL, {value = -20})
-					context.eventObserver:emit(GameEvents.UPGRADE_CARD, {cardId = data1.id})
-					context.eventObserver:emit(GameEvents.UPGRADE_CARD, {cardId = data2.id})
+					if #unupgradedCards >= 2 then
+						local data1, data2 = Tables.selectTwoRandomElements(unupgradedCards)
+						context.eventObserver:emit(GameEvents.PLAYER_HEALTH_HURT_HEAL, {value = -20})
+						context.eventObserver:emit(GameEvents.UPGRADE_CARD, {cardId = data1.id})
+						context.eventObserver:emit(GameEvents.UPGRADE_CARD, {cardId = data2.id})
+					end 
 					return {
 						eventResultType = EventResultTypes.END_RESULT, 
 						description = "You lift your head and hear a voice in the background, \"Rise and go.\" You feel much more powerful.",

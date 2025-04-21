@@ -36,15 +36,12 @@ return function()
 				local newEvent = BaseEvent.new(eventId)
 				print(context.eventObserver)
 				for i, choice in ipairs(event.choices) do
-					local success, result
-					success, result = pcall(function()
+					expect(function()
 						return newEvent:checkOptionData(i, context)
-					end)
-					expect(success).to.equal(true)
-					success, result = pcall(function()
+					end).never.to.throw()
+					expect(function()
 						return newEvent:executeEvent(i, context)
-					end)
-					expect(success).to.equal(true)
+					end).never.to.throw()
 				end
 			end)
 		end
