@@ -44,9 +44,11 @@ function TargetingRules.getValidTargets(context: ContextType.context)
 		local override = CustomTargetResolvers[cardData.key] --TODO
 		if override then return override(context) end
 	end
+	return TargetingRules.useTargetHandler(cardData.targetType, context)
+end
 
-	local handler = TargetTypeHandlers[cardData.targetType] or TargetingRules._default
-	
+function TargetingRules.useTargetHandler(targetType, context: ContextType.context)
+	local handler = TargetTypeHandlers[targetType]
 	return handler.getTargets(context)
 end
 

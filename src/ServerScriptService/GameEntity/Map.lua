@@ -137,8 +137,8 @@ function Map:generate(playerState)
 		end
 		if height == 1 then
 			local newNode = self:_createNode(
-				MapNodeTypes.EVENT,
-				self:getNodeData(MapNodeTypes.EVENT, 0, playerState),
+				MapNodeTypes.REGULAR_ENEMY,
+				self:getNodeData(MapNodeTypes.REGULAR_ENEMY, 0, playerState),
 				Vector2.new(1, 1)
 			)
 			lastNode = newNode

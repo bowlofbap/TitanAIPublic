@@ -182,8 +182,7 @@ local UnitRepo = {
 				[AnimationTypes.TAKE_DAMAGE] = "rbxassetid://110809822837427",
 			},
 			CardSet = {
-				CardRepo.Barrier1.key,
-				CardRepo.Fireball.key,
+				CardRepo.E001.key,
 			},
 		},
 	}

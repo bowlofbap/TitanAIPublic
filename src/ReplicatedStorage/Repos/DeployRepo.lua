@@ -35,6 +35,7 @@ local UnitRepo = {
 			},
 			onDeploy = function(self, eventObserver, gameInstance)
 				return eventObserver:subscribeTo(GameEvents.START_UNIT_TURN, function(data)
+					print("Hyello", data.unit, gameInstance.player.unit)
 					if data.unit == gameInstance.player.unit then
 						gameInstance:grantEnergy(data.unit, self.data.value)
 					end

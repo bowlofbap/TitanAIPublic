@@ -1,6 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local TargetingUtils = require(ReplicatedStorage.Helpers.GameInstance.TargetingUtils)
 local ContextType = require(ReplicatedStorage.Helpers.GameInstance.Classes.CardExecutionContextType)
 local AreaResolver = require(ReplicatedStorage.Helpers.GameInstance.AreaResolver)
 

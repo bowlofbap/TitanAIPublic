@@ -24,6 +24,7 @@ local TargetingRules = require(ReplicatedStorage.Helpers.GameInstance.TargetingR
 local CardExecutionContext = require(ReplicatedStorage.Helpers.GameInstance.Classes.ServerCardExecutionContext)
 local ContextType = require(ReplicatedStorage.Helpers.GameInstance.Classes.CardExecutionContextType)
 local Tables = require(ReplicatedStorage.Helpers.Tables)
+local env = require(ReplicatedStorage.env)
 
 local Constants = require(ReplicatedStorage.Helpers.Constants)
 
@@ -640,7 +641,9 @@ function GameInstance:startEnemyTurn()
 		self:resetUnitBlock(enemy)
 	end
 	for _, enemy in ipairs(enemies) do
-		wait(1)
+		if env.ENV ~= "test" then
+			wait(1)
+		end
 		if lastEnemy then
 			lastEnemy.Hover = false
 		end

@@ -51,6 +51,9 @@
         },
         "Tests":{
             "$path": "src/ReplicatedStorage/Tests"
+        },
+        "env":{
+          "$path": "src/ReplicatedStorage/TestEnv.lua"
         }
       },
       "StarterPlayer": {

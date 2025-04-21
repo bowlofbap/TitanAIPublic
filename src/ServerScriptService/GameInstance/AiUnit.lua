@@ -1,17 +1,15 @@
-local TweenService = game:GetService("TweenService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Unit = require(ServerScriptService.GameInstance.Unit)
-local UnitGui = ReplicatedStorage.Models.UI.UnitGui
 local UnitRepo = require(ReplicatedStorage.Repos.UnitRepo)
-local Tables = require(ReplicatedStorage.Helpers.Tables)
 local Card = require(ServerScriptService.GameInstance.Card)
 local EntityCard = require(ServerScriptService.GameEntity.EntityCard)
 local AiBrain = require(ServerScriptService.GameInstance.AiBrain)
 
 local CardExecutionContext = require(ReplicatedStorage.Helpers.GameInstance.Classes.ServerCardExecutionContext)
 local ContextType = require(ReplicatedStorage.Helpers.GameInstance.Classes.CardExecutionContextType)
+local env = require(ReplicatedStorage.env)
 
 local AiUnit = setmetatable({}, {__index = Unit})
 AiUnit.__index = AiUnit
@@ -57,7 +55,9 @@ function AiUnit:executeActions(gameInstance)
 		local targetCoordinates = nil
 		local context = CardExecutionContext.new(gameInstance, card.cardData, self, targetCoordinates)
 		gameInstance:executeAiCard(card, context)
-		wait(.5)
+		if env.ENV ~= "test" then
+			wait(.5)
+		end
 	end
 end
 

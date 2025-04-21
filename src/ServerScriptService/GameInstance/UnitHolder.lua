@@ -47,7 +47,7 @@ function UnitHolder:deployUnit(caster, node, deployData, card, eventObserver, ga
 	newUnit.UnitType = UnitTypes.DEPLOY
 	self:_configureUnit(newUnit, caster.Team)
 	newUnit:moveToNode(node)
-	node.isOccupied = true--this doesnt smell right
+	gameInstance.board:occupyNodeAt(node.coordinates, newUnit)
 	newUnit:deploy(eventObserver, gameInstance)
 	return newUnit
 end

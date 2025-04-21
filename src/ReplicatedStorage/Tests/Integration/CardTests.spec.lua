@@ -6,6 +6,7 @@ return function()
 		local CardExecutionContext = require(ReplicatedStorage.Helpers.GameInstance.Classes.ServerCardExecutionContext)
 		local GameEvents = require(ReplicatedStorage.Enums.GameEvents)
 		local StatusTypes = require(ReplicatedStorage.Enums.StatusTypes)
+		local TargetTypes = require(ReplicatedStorage.Enums.TargetTypes)
 		local MockedPlayer
 		local MockedData
 		local MapNodeTypes
@@ -20,9 +21,11 @@ return function()
 		local MockedPosition
 		local dependencies
         local testCardName 
-		
+		local eventChecks = 0
+
 		local function setupGameInstance()
-			print("setting up for new instance")
+			print("setting up for new instance") 
+			eventChecks = 0
 			MockedPlayer = Instance.new("Part")
 			MockedData = require(ReplicatedStorage.Repos.StarterRepos.TestData)
             local testDeck = {
@@ -60,6 +63,10 @@ return function()
 			CurrentInstance = NodeInstanceFactory:createInstance(MapNodeTypes.REGULAR_ENEMY, dependencies)
 		end
 
+		local function passTurn()
+			CurrentInstance:requestEndTurn()
+		end
+
 		afterEach(function()
 			print("teardown instance")
 			CurrentInstance:Destroy()
@@ -75,7 +82,6 @@ return function()
 
 			it("Confirms that ".. cardName .." is initialized correctly", function()
 				--setup
-				local eventChecks = 0
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
@@ -108,7 +114,6 @@ return function()
 
 			it("Confirms that ".. cardName .." is initialized correctly", function()
 				--setup
-				local eventChecks = 0
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
@@ -143,7 +148,6 @@ return function()
 
 			it("Confirms that ".. cardName .." is initialized correctly", function()
 				--setup
-				local eventChecks = 0
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
@@ -167,11 +171,122 @@ return function()
 				expect(caster:getStatus(StatusTypes.REFLECT_DOWN)).to.be.ok()
 
 				--action
-				CurrentInstance:requestEndTurn()
+				passTurn()
 
 				--assert
 				expect(caster:getStatus(StatusTypes.REFLECT_BUFF)).never.to.be.ok()
 				expect(caster:getStatus(StatusTypes.REFLECT_DOWN)).never.to.be.ok()
+				expect(eventChecks).to.equal(1)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC003"
+			beforeEach(function()
+				testCardName = cardName
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. cardName .." is initialized correctly", function()
+				--setup
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+	
+				--assert
+				expect(caster:getStatus(StatusTypes.STRENGTH_BUFF)).to.be.ok()
+				expect(caster:getStatus(StatusTypes.STRENGHT_DOWN)).to.be.ok()
+
+				--action
+				passTurn()
+
+				--assert
+				expect(caster:getStatus(StatusTypes.STRENGTH_BUFF)).never.to.be.ok()
+				expect(caster:getStatus(StatusTypes.STRENGHT_DOWN)).never.to.be.ok()
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC004"
+			beforeEach(function()
+				testCardName = cardName
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. cardName .." is initialized correctly", function()
+				--setup
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = caster.coordinates + Vector2.new(1,0)
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				EventObserver:subscribeTo(GameEvents.GRANT_ENERGY, function(data)
+					eventChecks += 1
+					expect(data.unit).to.equal(caster)
+				end)
+
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+	
+				--assert
+				local occupyingUnit = CurrentInstance.board:isNodeAtCoordsOccupied(targetCoordinates)
+				expect(occupyingUnit).to.be.ok()
+				
+				--action
+				passTurn()
+
+				--assert
+				expect(eventChecks).to.equal(1)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC005"
+			beforeEach(function()
+				testCardName = cardName
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. cardName .." is initialized correctly", function()
+				--setup
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = caster.coordinates + Vector2.new(1,0)
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				EventObserver:subscribeTo(GameEvents.GRANT_ENERGY, function(data)
+					eventChecks += 1
+					expect(data.unit).to.equal(caster)
+				end)
+
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+	
+				--assert
+				local occupyingUnit = CurrentInstance.board:isNodeAtCoordsOccupied(targetCoordinates)
+				expect(occupyingUnit).to.be.ok()
+				
+				--action
+				passTurn()
+
+				--assert
 				expect(eventChecks).to.equal(1)
 			end)
 		end)

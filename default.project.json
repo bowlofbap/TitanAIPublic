@@ -30,6 +30,9 @@
         },
         "Stages":{
             "$path": "src/ReplicatedStorage/Stages"
+        },
+        "env":{
+          "$path": "src/ReplicatedStorage/ProdEnv.lua"
         }
       },
       "StarterPlayer": {
