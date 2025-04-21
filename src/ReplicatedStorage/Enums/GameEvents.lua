@@ -16,6 +16,7 @@ local GameEvents = {
 	DRAW = "Draw",
 	SHUFFLE = "Shuffle",
 	BLOCKING = "Blocking",
+	APPLYING_BLOCK = "Apply block",
 	DEPLETING_CARD = "Depleting Card",
 	OPENING_CARD_PACK = "Opening card pack",
 	HEALTH_CHANGED = "Health Changed",

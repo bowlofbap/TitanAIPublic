@@ -71,6 +71,10 @@ function StatusManager:remove(status)
 	print("Removing!")
 end
 
+function StatusManager:getAllStatuses()
+	return self.statuses
+end
+
 function StatusManager:serialize()
 	local statuses = {}
 	for _, status in ipairs(self.statuses) do

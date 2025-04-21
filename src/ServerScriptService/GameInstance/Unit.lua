@@ -1,8 +1,4 @@
-local TweenService = game:GetService("TweenService")
-local UnitGui = game:GetService("ReplicatedStorage").Models.UI.UnitGui
-local UnitRepo = require(game:GetService("ReplicatedStorage").Repos.UnitRepo)
 local StatusManager = require(game:GetService("ServerScriptService").GameInstance.StatusManager)
-local AnimationTypes = require(game:GetService("ReplicatedStorage").Enums.AnimationTypes)
 
 local Unit = {}
 Unit.__index = Unit

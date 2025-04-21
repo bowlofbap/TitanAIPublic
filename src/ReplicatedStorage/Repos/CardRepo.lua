@@ -2,11 +2,12 @@ local Cards = game:GetService("ReplicatedStorage").Repos.Cards
 local TempRepo = require(Cards.TemporaryRepo)
 local CommonZe = require(Cards.CommonZe)
 local RainbowAll = require(Cards.RainbowAll)
+local EnemyAll = require(Cards.EnemyAll)
 
 local CardDatabase = {}
 
 for _, cardSet in pairs({
-	TempRepo, RainbowAll,
+	TempRepo, RainbowAll, EnemyAll,
 	CommonZe
 	}) do
 	for cardName, cardData in pairs(cardSet) do

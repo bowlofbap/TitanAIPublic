@@ -5,6 +5,7 @@ return function()
 		local TargetingRules = require(ReplicatedStorage.Helpers.GameInstance.TargetingRules)
 		local CardExecutionContext = require(ReplicatedStorage.Helpers.GameInstance.Classes.ServerCardExecutionContext)
 		local GameEvents = require(ReplicatedStorage.Enums.GameEvents)
+		local StatusTypes = require(ReplicatedStorage.Enums.StatusTypes)
 		local MockedPlayer
 		local MockedData
 		local MapNodeTypes
@@ -20,7 +21,7 @@ return function()
 		local dependencies
         local testCardName 
 		
-		beforeEach(function()
+		local function setupGameInstance()
 			print("setting up for new instance")
 			MockedPlayer = Instance.new("Part")
 			MockedData = require(ReplicatedStorage.Repos.StarterRepos.TestData)
@@ -42,20 +43,9 @@ return function()
 				return CurrentInstance
 			end)
 			MockedPosition = Vector3.new(0,0,0)
-		end)
-
-		afterEach(function()
-			print("teardown instance")
-			CurrentInstance:Destroy()
-			CurrentInstance = nil
-		end)
-
-        testCardName = "ZC001"
-		it("Confirms that ".. testCardName .." is initialized correctly", function()
-			local CurrentMapNodeType = MapNodeTypes.REGULAR_ENEMY
 			MockedStageData = require(ReplicatedStorage.Stages.Level1).test[1]
 			dependencies = {
-				mapNodeType = CurrentMapNodeType, 
+				mapNodeType = MapNodeTypes.REGULAR_ENEMY, 
 				robloxPlayer = MockedPlayer, 
 				playerState = PlayerState, 
 				deckManager = DeckManager,
@@ -67,27 +57,123 @@ return function()
 				idGenerator = IdGenerator, 
 				eventObserver = EventObserver,
 			}
-			CurrentInstance = NodeInstanceFactory:createInstance(CurrentMapNodeType, dependencies)
-		CurrentInstance:start()
-			local caster = CurrentInstance.player.unit
-			local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
-			local targetCoordinates = nil
-			local mockedClientData = {
-				cardId = testingCard.id,
-				targetCoordinates = targetCoordinates
-			}
-			local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
-			local expectedEnemy = TargetingRules.getValidTargets(mockContext)
+			CurrentInstance = NodeInstanceFactory:createInstance(MapNodeTypes.REGULAR_ENEMY, dependencies)
+		end
 
-			EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
-				print(data)
-				expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
-				expect(data.source).to.equal(caster)
-				expect(data.target.Id).to.equal(expectedEnemy.Id)
-			end)
-
-			CurrentInstance:requestPlayCard(mockedClientData)
+		afterEach(function()
+			print("teardown instance")
+			CurrentInstance:Destroy()
+			CurrentInstance = nil
 		end)
 
+		describe("CardTest", function()
+			local cardName = "E001"
+			beforeEach(function()
+				testCardName = cardName
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. cardName .." is initialized correctly", function()
+				--setup
+				local eventChecks = 0
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+	
+				EventObserver:subscribeTo(GameEvents.PLAY_CARD, function(data)
+					expect(data.card).to.equal(testingCard)
+					eventChecks+=1
+				end)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+	
+				--assert
+				expect(eventChecks).to.equal(1)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC001"
+			beforeEach(function()
+				testCardName = cardName
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. cardName .." is initialized correctly", function()
+				--setup
+				local eventChecks = 0
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local expectedEnemies = TargetingRules.getValidTargets(mockContext)
+				EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
+					expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
+					expect(data.source).to.equal(caster)
+					eventChecks+=1
+				end)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+	
+				--assert
+				expect(expectedEnemies[1]:getStatus(StatusTypes.WEAKEN_DEBUFF)).to.be.ok()
+				expect(eventChecks).to.equal(1)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC002"
+			beforeEach(function()
+				testCardName = cardName
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. cardName .." is initialized correctly", function()
+				--setup
+				local eventChecks = 0
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				EventObserver:subscribeTo(GameEvents.APPLYING_BLOCK, function(data)
+					expect(data.target).to.equal(caster)
+					expect(data.blockAmount).to.equal(testingCard.cardData.effects[1].value)
+					eventChecks+=1
+				end)
+
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+	
+				--assert
+				expect(caster:getStatus(StatusTypes.REFLECT_BUFF)).to.be.ok()
+				expect(caster:getStatus(StatusTypes.REFLECT_DOWN)).to.be.ok()
+
+				--action
+				CurrentInstance:requestEndTurn()
+
+				--assert
+				expect(caster:getStatus(StatusTypes.REFLECT_BUFF)).never.to.be.ok()
+				expect(caster:getStatus(StatusTypes.REFLECT_DOWN)).never.to.be.ok()
+				expect(eventChecks).to.equal(1)
+			end)
+		end)
     end)
 end

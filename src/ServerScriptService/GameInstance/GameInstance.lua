@@ -87,19 +87,7 @@ function GameInstance:connectEvents()
 				warn("Card reward is already claimed for this instance")
 			end
 		elseif action == GameActions.END_TURN then
-			if self.isPlayerTurn and self.player:canEndTurn() then
-				self.isPlayerTurn = false
-				local handCards = Tables.shallowCopy(self.player.hand:getCards())
-				for i, card in ipairs(handCards) do
-					--self.player:discardCard(card)
-					self:discardCard(card)
-				end
-				self:endUnitTurn(self.player.unit)
-				self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_FRAMES, self:getUiData()))
-				self.stateSyncBuffer:flush()
-				print("Flushing player")
-				self:startEnemyTurn()
-			end
+			self:requestEndTurn()
 		elseif action == GameActions.END_GAME then
 			self:fireGameEvent(GameEventsTypes.FINISH_INSTANCE, self)
 		end
@@ -136,6 +124,22 @@ function GameInstance:requestPlayCard(data)
 		self:executePlayerCard(cardToPlay, context)
 	else
 		print("Failed to use card")
+	end
+end
+
+function GameInstance:requestEndTurn()
+	if self.isPlayerTurn and self.player:canEndTurn() then
+		self.isPlayerTurn = false
+		local handCards = Tables.shallowCopy(self.player.hand:getCards())
+		for i, card in ipairs(handCards) do
+			--self.player:discardCard(card)
+			self:discardCard(card)
+		end
+		self:endUnitTurn(self.player.unit)
+		self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_FRAMES, self:getUiData()))
+		self.stateSyncBuffer:flush()
+		print("Flushing player")
+		self:startEnemyTurn()
 	end
 end
 
@@ -412,9 +416,8 @@ function GameInstance:applyBlock(source, targets, blockAmount)
 	end
 	for _, target in ipairs(targets) do
 		local finalBlock = self:calculateFinalBlock(source, target, blockAmount)
-		--TODO: probably same thing as the heal where we fire a game event
 		local appliedBlock = target:applyBlock(finalBlock)
-		self:fireGameEvent(GameEventsTypes.BLOCKING, {target, blockAmount = appliedBlock})
+		self:fireGameEvent(GameEventsTypes.APPLYING_BLOCK, {source = source, target = target, blockAmount = appliedBlock})
 		self.stateSyncBuffer:add(StateUpdate.new(UiActions.APPLY_BLOCK, 
 			{
 				unitId = target.Id,

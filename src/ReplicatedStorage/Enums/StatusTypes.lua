@@ -1,4 +1,6 @@
-local StatusTypes = {
+local StatusTypes = {}
+
+StatusTypes = {
 	STRENGTH_BUFF = {
 		name = "Strength Up", 
 		image="rbxassetid://78494366360008",
@@ -13,7 +15,8 @@ local StatusTypes = {
 		image="rbxassetid://78494366360008",
 		defaultTickable = false,
 		stackable = true,
-		class = "StrengthDownStatus",
+		class = "StatusDownStatus",
+		targetStatusKey = "STRENGTH_BUFF",
 		isBuff = false,
 		canBeNegative = true
 	},
@@ -80,6 +83,16 @@ local StatusTypes = {
 		stackable = true,
 		class = "ReflectStatus",
 		isBuff = true,
+	},
+	REFLECT_DOWN = {
+		name = "Reflect Down", 
+		image="rbxassetid://78494366360008",
+		defaultTickable = false,
+		stackable = true,
+		class = "StatusDownDelayStatus",
+		targetStatusKey = "REFLECT_BUFF",
+		isBuff = false,
+		canBeNegative = true
 	},
 	ROOT_DEBUFF = {
 		name = "Root", 

@@ -73,7 +73,7 @@ local CardDatabase = {
 		effectChoice = TargetChoices.ALLY,
 		unitAnimation = AnimationTypes.BUFFING,
 		image = "rbxassetid://92210163001116",
-		description = "Apply {1.value} Block and {2.value} Reflect for one turn",
+		description = "Apply {1.value} Block and {2.value} Reflect until the start of next turn",
 		sound = AudioRepo.SFX.Fire,
 		cost = 2,
 		range = 0,
@@ -88,6 +88,11 @@ local CardDatabase = {
 				statusType = StatusTypes.REFLECT_BUFF,
 				value = 3,
 			},
+			{ 
+				effectType = EffectTypes.STATUS, 
+				statusType = StatusTypes.REFLECT_DOWN,
+				value = 3,
+			},
 		},
 		upgrades = {
 			{
@@ -96,6 +101,10 @@ local CardDatabase = {
 			},
 			{
 				stat = "2.value",
+				value = 2
+			},
+			{
+				stat = "3.value",
 				value = 2
 			},
 		}
