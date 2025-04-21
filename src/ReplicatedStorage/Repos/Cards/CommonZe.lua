@@ -154,7 +154,7 @@ local CardDatabase = {
 			}	
 		},
 		cardType = CardTypes.DEPLOY,
-		rarity = RarityTypes.STARTER,
+		rarity = RarityTypes.COMMON,
 		unitAnimation = AnimationTypes.BUFFING,
 		targetType = TargetTypes.SELECT_NODE,
 		targetChoice = TargetChoices.NONE, 

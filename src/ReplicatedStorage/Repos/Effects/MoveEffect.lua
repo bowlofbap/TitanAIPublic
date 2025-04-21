@@ -24,7 +24,7 @@ function MoveEffect:execute(primaryTargets, effectTargets, gameInstance, context
 	local caster = context:getCardData()
 	local direction = self.effectData.direction
 	for _, target in ipairs(effectTargets)  do
-		gameInstance:moveTarget(caster, target, direction, self.effectData.value)
+	gameInstance:moveTarget(caster, target, direction, self.effectData.value)
 	end 
 end
 
