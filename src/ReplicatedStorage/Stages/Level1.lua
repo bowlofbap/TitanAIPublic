@@ -5,8 +5,8 @@ local Level1 = {
 		{
 			units = {
 				{
-					name = "GlitchGoblin",
-					position = Vector2.new(2, 2)
+					name = "TestEnemy",
+					position = Vector2.new(1, 2)
 				},
 			},
 			rewards = {

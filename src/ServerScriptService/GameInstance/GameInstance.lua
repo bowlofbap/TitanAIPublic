@@ -58,19 +58,7 @@ function GameInstance:connectEvents()
 	gameEvents.ToServer.GameActionRequest.OnServerEvent:Connect(function(robloxPlayer, action, data) --may change to just generic data, action parameters...
 		if robloxPlayer ~= self.player.robloxPlayer then warn("invalid player sent data") return nil end
 		if action == GameActions.PLAY_CARD then
-			local cardId = data.cardId
-			local targetCoordinates = data.targetCoordinates
-			local caster = self.player.unit
-			local cardToPlay = self.player.hand:getCardById(cardId)
-			if not cardToPlay then
-				warn("card is not in hand anymore")
-			end
-			local context = CardExecutionContext.new(self, cardToPlay.cardData, caster, targetCoordinates)
-			if TargetingRules.canBePlayed(context) and self.player:canPlayCard(cardToPlay) then
-				self:executePlayerCard(cardToPlay, context)
-			else
-				print("Failed to use card")
-			end
+			self:requestPlayCard(data)
 		elseif action == GameActions.MOVE then
 			local direction = data.direction
 			local value = data.value or 1 --might change later..? depends on how specific we want to make effects
@@ -132,6 +120,22 @@ function GameInstance:connectEvents()
 			return card.id
 		end
 		return nil
+	end
+end
+
+function GameInstance:requestPlayCard(data)
+	local cardId = data.cardId
+	local targetCoordinates = data.targetCoordinates
+	local caster = self.player.unit
+	local cardToPlay = self.player.hand:getCardById(cardId)
+	if not cardToPlay then
+		warn("card is not in hand anymore")
+	end
+	local context = CardExecutionContext.new(self, cardToPlay.cardData, caster, targetCoordinates)
+	if TargetingRules.canBePlayed(context) and self.player:canPlayCard(cardToPlay) then
+		self:executePlayerCard(cardToPlay, context)
+	else
+		print("Failed to use card")
 	end
 end
 

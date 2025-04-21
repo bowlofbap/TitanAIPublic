@@ -33,6 +33,14 @@ function Hand:getCardById(id)
 	return self.cardById[id]
 end
 
+function Hand:getCardByPlace(index)
+	if #self.cards < index then
+		warn("Not enough cards for that")
+		return nil
+	end
+	return self.cards[index]
+end
+
 --returns a shallow copy
 function Hand:getCards()
 	return Tables.shallowCopy(self.cards)

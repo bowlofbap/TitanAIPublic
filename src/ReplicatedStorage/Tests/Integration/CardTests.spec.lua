@@ -2,6 +2,8 @@ return function()
 	describe("Instances", function()
 		local ReplicatedStorage = game:GetService("ReplicatedStorage")
 		local ServerScriptService = game:GetService("ServerScriptService")
+		local TargetingRules = require(ReplicatedStorage.Helpers.GameInstance.TargetingRules)
+		local CardExecutionContext = require(ReplicatedStorage.Helpers.GameInstance.Classes.ServerCardExecutionContext)
 		local GameEvents = require(ReplicatedStorage.Enums.GameEvents)
 		local MockedPlayer
 		local MockedData
@@ -22,8 +24,6 @@ return function()
 			print("setting up for new instance")
 			MockedPlayer = Instance.new("Part")
 			MockedData = require(ReplicatedStorage.Repos.StarterRepos.TestData)
-            local c = require(game:GetService("ReplicatedStorage").Repos.CardRepo)
-
             local testDeck = {
                 {
                     cardName = testCardName,
@@ -51,7 +51,7 @@ return function()
 		end)
 
         testCardName = "ZC001"
-		it("Confirms that GameInstance is initialized correctly", function()
+		it("Confirms that ".. testCardName .." is initialized correctly", function()
 			local CurrentMapNodeType = MapNodeTypes.REGULAR_ENEMY
 			MockedStageData = require(ReplicatedStorage.Stages.Level1).test[1]
 			dependencies = {
@@ -68,11 +68,25 @@ return function()
 				eventObserver = EventObserver,
 			}
 			CurrentInstance = NodeInstanceFactory:createInstance(CurrentMapNodeType, dependencies)
-			CurrentInstance:start()
-			expect(CurrentInstance._turnCount).to.equal(1)
-			expect(CurrentInstance._isPlaying).to.equal(true)
-			expect(CurrentInstance.isPlayerTurn).to.equal(true)
-			expect(#CurrentInstance.unitHolder:getAll()).to.equal(2)
+		CurrentInstance:start()
+			local caster = CurrentInstance.player.unit
+			local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+			local targetCoordinates = nil
+			local mockedClientData = {
+				cardId = testingCard.id,
+				targetCoordinates = targetCoordinates
+			}
+			local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+			local expectedEnemy = TargetingRules.getValidTargets(mockContext)
+
+			EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
+				print(data)
+				expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
+				expect(data.source).to.equal(caster)
+				expect(data.target.Id).to.equal(expectedEnemy.Id)
+			end)
+
+			CurrentInstance:requestPlayCard(mockedClientData)
 		end)
 
     end)

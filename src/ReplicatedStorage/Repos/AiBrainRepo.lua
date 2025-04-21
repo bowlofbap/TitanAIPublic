@@ -16,6 +16,15 @@ local brainRepo = {
 				return 1
 			end
 		end,
+	} ,
+	TestEnemy = {
+		selectCard = function(unit, gameInstance)
+			if gameInstance:getTurnCount() % 2 == 1 then
+				return 2
+			else
+				return 1
+			end
+		end,
 	} 
 }
 

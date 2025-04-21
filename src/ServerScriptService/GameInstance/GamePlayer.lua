@@ -1,4 +1,3 @@
-local Unit = require(game:GetService("ServerScriptService").GameInstance.Unit) 
 local Deck = require(game:GetService("ServerScriptService").GameInstance.Deck)
 local Discard = require(game:GetService("ServerScriptService").GameInstance.Discard)
 local Hand = require(game:GetService("ServerScriptService").GameInstance.Hand)
@@ -18,7 +17,7 @@ function GamePlayer.new(robloxPlayer, playerState, deckData, idGenerator, unitHo
 	self.unit = nil
 	self.discard = Discard.new()
 	self.hand = Hand.new()
-	self.deck = Deck.new(deckData, idGenerator, robloxPlayer.Name)
+	self.deck = Deck.new(deckData, idGenerator)
 	self.executingCard = false
 	return self
 end

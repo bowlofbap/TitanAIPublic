@@ -169,7 +169,22 @@ local UnitRepo = {
 				CardRepo.Barrier1.key,
 				CardRepo.Fireball.key,
 			},
-
+		},
+		TestEnemy = {
+			Name = "Glitch Goblin",
+			key = "TestEnemy",
+			Model = ModelFolder.GlitchGoblin,
+			MaxHealth = 100,
+			Animations = {
+				[AnimationTypes.ATTACKING] = "rbxassetid://110809822837427",
+				[AnimationTypes.BUFFING] = "rbxassetid://110809822837427",
+				[AnimationTypes.IDLE] = "rbxassetid://70376749365831",
+				[AnimationTypes.TAKE_DAMAGE] = "rbxassetid://110809822837427",
+			},
+			CardSet = {
+				CardRepo.Barrier1.key,
+				CardRepo.Fireball.key,
+			},
 		},
 	}
 }
