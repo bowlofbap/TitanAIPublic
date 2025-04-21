@@ -23,7 +23,7 @@ function EventObserver:subscribeTo(eventName, callback)
 end
 
 function EventObserver:emit(eventName, ...)
-	print(eventName, ...)
+	print("[EVENT_OBSERVER]", eventName, ...)
 	local listeners = self._listeners[eventName]
 	if not listeners then return end
 

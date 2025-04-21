@@ -63,10 +63,19 @@ function TargetingRules.getEffectTargets(primaryTargets: table, context: Context
 	
 	for _, target in ipairs(primaryTargets) do
 		if radius == 0 then
-			table.insert(effectTargets, target)
-			continue
-		else
 			if cardData.targetType == TargetTypes.SELECT_NODE then
+				if CardUtils.hasTag(cardData, CardAttributeTags.AFFECTS_UNIT) then
+					if target:getOccupyingUnit() then
+						table.insert(effectTargets, target:getOccupyingUnit())
+					end
+				else
+					table.insert(effectTargets, target)
+				end
+			else
+				table.insert(effectTargets, target)
+			end
+		else
+			if cardData.targetType == TargetTypes.SELECT_NODE and not CardUtils.hasTag(cardData, CardAttributeTags.AFFECTS_UNIT) then
 				local nodes = AreaResolver.getNodesInRadius(target.coordinates, cardData.radius, context)
 				for _, node in ipairs(nodes) do
 					table.insert(effectTargets, node)
@@ -77,7 +86,6 @@ function TargetingRules.getEffectTargets(primaryTargets: table, context: Context
 					table.insert(effectTargets, unit)
 				end
 			end
-			continue
 		end
 	end
 	return effectTargets
@@ -92,13 +100,11 @@ function TargetingRules.getEffectAreaNodes(primaryTargets, context: ContextType.
 			local coordinates = target.coordinates
 			local node = context:getNodeAt(coordinates)
 			table.insert(effectAreaNodes, node)
-			continue
 		else
 			local nodes = AreaResolver.getNodesInRadius(target.coordinates, cardData.radius, context) --TODO ensure no duplicates if we wanna optimise more
 			for _, node in ipairs(nodes) do
 				table.insert(effectAreaNodes, node)
 			end
-			continue
 		end
 	end
 	return effectAreaNodes
@@ -113,10 +119,20 @@ end
 
 function TargetingRules.canBePlayed(context)
 	local cardData = context:getCardData()
-	local caster = context:getCaster()
 	if CardUtils.hasTag(cardData, CardAttributeTags.REQUIRES_TARGET) then
 		local targets = TargetingRules.getValidTargets(context)
 		if not targets or #targets == 0 then
+			return false, "No valid targets"
+		end
+	end
+
+	if CardUtils.hasTag(cardData, CardAttributeTags.REQUIRES_TARGET_IN_NODES) then
+		local primaryTargets = TargetingRules.getValidTargets(context)
+		if not primaryTargets or #primaryTargets == 0 then
+			return false, "No primary target"
+		end
+		local potentialUnits = AreaResolver.getUnitsInRadius(primaryTargets[1].coordinates, cardData.radius, context)
+		if not potentialUnits or #potentialUnits == 0 then
 			return false, "No valid targets"
 		end
 	end

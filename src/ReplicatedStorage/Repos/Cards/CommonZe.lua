@@ -181,31 +181,99 @@ local CardDatabase = {
 		}
 	},
 	["ZC005"] = {
-		stringName = "Disabler",
-		cardType = CardTypes.DEPLOY,
+		stringName = "Ion Surge",
+		animationClass = nil,
+		tags = {
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET,
+			},
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET_IN_NODES
+			},
+			{
+				tagType = CardAttributeTags.AFFECTS_UNIT
+			}
+		},
+		cardType = CardTypes.DAMAGE,
 		rarity = RarityTypes.COMMON,
-		unitAnimation = AnimationTypes.BUFFING,
+		unitAnimation = AnimationTypes.ATTACKING,
 		targetType = TargetTypes.SELECT_NODE,
-		targetChoice = TargetChoices.NONE, 
-		effectChoice = TargetChoices.NONE, 
-		image = "rbxassetid://88718253755872",
-		description = "Provides {1.value} Energy at the start of the turn",
+		targetChoice = TargetChoices.ENEMY, 
+		effectChoice = TargetChoices.ENEMY, 
+		image = "rbxassetid://90356868289376",
+		description = "Deals {1.value} damage to enemy, applying Root",
+		upgradeDescription = "Deals {1.value} damage to enemies in area, applying Root",
 		sound = AudioRepo.SFX.Fire,
 		cost = 1,
-		range = 1,
+		range = 4,
 		radius = 0,
 		effects = {
 			{ 
-				effectType = EffectTypes.DEPLOY,
-				unitData = DeployUnits.Overclocker,
+				effectType = EffectTypes.DAMAGE, 
+				damageType = DamageTypes.DIRECT,
+				value = 7,
+			},
+			{ 
+				effectType = EffectTypes.STATUS, 
+				statusType = StatusTypes.ROOT_DEBUFF,
 				value = 1,
-				health = 10
-			}
+			},
 		},
 		upgrades = {
 			{
-				stat = "1.health",
-				value = 5
+				stat = "radius",
+				value = 1
+			},
+			{
+				stat = "1.value",
+				value = 3
+			},
+		}
+	},
+	["ZC006"] = {
+		stringName = "StaticFeedback",
+		animationClass = nil,
+		tags = {
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET,
+			},
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET_IN_NODES
+			},
+			{
+				tagType = CardAttributeTags.AFFECTS_UNIT
+			}
+		},
+		cardType = CardTypes.DAMAGE,
+		rarity = RarityTypes.COMMON,
+		unitAnimation = AnimationTypes.ATTACKING,
+		targetType = TargetTypes.SELECT_NODE,
+		targetChoice = TargetChoices.ENEMY, 
+		effectChoice = TargetChoices.ENEMY, 
+		image = "rbxassetid://90356868289376",
+		description = "Deals {1.value} damage to all enemies in area. If at least 2 enemies hit, gain {1.energyGained} Energy.",
+		sound = AudioRepo.SFX.Fire,
+		cost = 0,
+		range = 4,
+		radius = 1,
+		effects = {
+			{ 
+				effectType = EffectTypes.CUSTOM, 
+				customEffect = CustomEffects.DamageAndGainEnergy,
+				damageType = DamageTypes.DIRECT,
+				value = 4,
+				minTargets = 2,
+				energyGained = 1
+			},
+		},
+		upgrades = {
+			{
+				stat = "1.value",
+				value = 2
+			},
+			{
+				stat = "1.energyGained",
+				value = 1
 			},
 		}
 	},

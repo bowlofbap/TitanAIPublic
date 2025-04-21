@@ -80,7 +80,7 @@ return function()
 				setupGameInstance()
 			end)
 
-			it("Confirms that ".. cardName .." is initialized correctly", function()
+			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
@@ -90,7 +90,7 @@ return function()
 					cardId = testingCard.id,
 					targetCoordinates = targetCoordinates
 				}
-				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
 	
 				EventObserver:subscribeTo(GameEvents.PLAY_CARD, function(data)
 					expect(data.card).to.equal(testingCard)
@@ -98,7 +98,7 @@ return function()
 				end)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+				CurrentInstance:requestPlayCard(mockedClientData, context)
 	
 				--assert
 				expect(eventChecks).to.equal(1)
@@ -112,7 +112,7 @@ return function()
 				setupGameInstance()
 			end)
 
-			it("Confirms that ".. cardName .." is initialized correctly", function()
+			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
@@ -122,8 +122,8 @@ return function()
 					cardId = testingCard.id,
 					targetCoordinates = targetCoordinates
 				}
-				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
-				local expectedEnemies = TargetingRules.getValidTargets(mockContext)
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local expectedEnemies = TargetingRules.getValidTargets(context)
 				EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
 					expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
 					expect(data.source).to.equal(caster)
@@ -131,7 +131,7 @@ return function()
 				end)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+				CurrentInstance:requestPlayCard(mockedClientData, context)
 	
 				--assert
 				expect(expectedEnemies[1]:getStatus(StatusTypes.WEAKEN_DEBUFF)).to.be.ok()
@@ -146,7 +146,7 @@ return function()
 				setupGameInstance()
 			end)
 
-			it("Confirms that ".. cardName .." is initialized correctly", function()
+			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
@@ -156,7 +156,7 @@ return function()
 					cardId = testingCard.id,
 					targetCoordinates = targetCoordinates
 				}
-				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
 				EventObserver:subscribeTo(GameEvents.APPLYING_BLOCK, function(data)
 					expect(data.target).to.equal(caster)
 					expect(data.blockAmount).to.equal(testingCard.cardData.effects[1].value)
@@ -164,7 +164,7 @@ return function()
 				end)
 
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+				CurrentInstance:requestPlayCard(mockedClientData, context)
 	
 				--assert
 				expect(caster:getStatus(StatusTypes.REFLECT_BUFF)).to.be.ok()
@@ -187,7 +187,7 @@ return function()
 				setupGameInstance()
 			end)
 
-			it("Confirms that ".. cardName .." is initialized correctly", function()
+			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
@@ -197,10 +197,10 @@ return function()
 					cardId = testingCard.id,
 					targetCoordinates = targetCoordinates
 				}
-				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
 
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+				CurrentInstance:requestPlayCard(mockedClientData, context)
 	
 				--assert
 				expect(caster:getStatus(StatusTypes.STRENGTH_BUFF)).to.be.ok()
@@ -222,7 +222,7 @@ return function()
 				setupGameInstance()
 			end)
 
-			it("Confirms that ".. cardName .." is initialized correctly", function()
+			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
@@ -232,14 +232,14 @@ return function()
 					cardId = testingCard.id,
 					targetCoordinates = targetCoordinates
 				}
-				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
 				EventObserver:subscribeTo(GameEvents.GRANT_ENERGY, function(data)
 					eventChecks += 1
 					expect(data.unit).to.equal(caster)
 				end)
 
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+				CurrentInstance:requestPlayCard(mockedClientData, context)
 	
 				--assert
 				local occupyingUnit = CurrentInstance.board:isNodeAtCoordsOccupied(targetCoordinates)
@@ -260,34 +260,70 @@ return function()
 				setupGameInstance()
 			end)
 
-			it("Confirms that ".. cardName .." is initialized correctly", function()
+			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
 				CurrentInstance:start()
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
-				local targetCoordinates = caster.coordinates + Vector2.new(1,0)
+				local targetCoordinates = CurrentInstance.unitHolder:getEnemies(caster.Team)[1].coordinates
 				local mockedClientData = {
 					cardId = testingCard.id,
 					targetCoordinates = targetCoordinates
 				}
-				local mockContext = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
-				EventObserver:subscribeTo(GameEvents.GRANT_ENERGY, function(data)
-					eventChecks += 1
-					expect(data.unit).to.equal(caster)
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local expectedTargetNodes = TargetingRules.getValidTargets(context)
+				local expectedTargetEnemy = expectedTargetNodes[1]:getOccupyingUnit()
+				EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
+					expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
+					expect(data.source).to.equal(caster)
+					expect(data.target).to.equal(expectedTargetEnemy)
+					eventChecks+=1
 				end)
-
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
+	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, mockContext)
+				CurrentInstance:requestPlayCard(mockedClientData, context)
 	
 				--assert
-				local occupyingUnit = CurrentInstance.board:isNodeAtCoordsOccupied(targetCoordinates)
-				expect(occupyingUnit).to.be.ok()
-				
-				--action
-				passTurn()
-
-				--assert
+				expect(expectedTargetEnemy:getStatus(StatusTypes.ROOT_DEBUFF)).to.be.ok()
 				expect(eventChecks).to.equal(1)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC006"
+			beforeEach(function()
+				testCardName = cardName
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. cardName .." is executes correctly", function()
+				--setup
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = CurrentInstance.unitHolder:getEnemies(caster.Team)[1].coordinates
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
+					expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
+					eventChecks+=1
+				end)
+				EventObserver:subscribeTo(GameEvents.GRANT_ENERGY, function(data)
+					expect(data.unit).to.equal(caster)
+					expect(data.value).to.equal(testingCard.cardData.effects[1].energyGained)
+					eventChecks+=1
+				end)
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, context)
+	
+				--assert
+				expect(eventChecks).to.equal(3)
 			end)
 		end)
     end)

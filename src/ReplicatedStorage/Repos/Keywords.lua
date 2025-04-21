@@ -40,6 +40,10 @@ local Keywords = {
 	Reflect = {
 		name = "Reflect",
 		description = "Reflects damage when hit equal to amount"
+	},
+	Root = {
+		name = "Root",
+		description = "Prevents from moving"
 	}
 }
 

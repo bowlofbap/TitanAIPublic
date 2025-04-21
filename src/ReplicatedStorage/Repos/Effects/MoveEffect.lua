@@ -23,38 +23,6 @@ end
 function MoveEffect:execute(primaryTargets, effectTargets, gameInstance, context: ContextType.context)
 	local caster = context:getCardData()
 	local direction = self.effectData.direction
-	--[[
-	if self.effectData.direction == Directions.CLOSER_Y then
-		local closerData = {
-			effectChoice = TargetChoices.ENEMY,
-			range = cardData.range
-		}
-		local closestEnemy = TargetHelper.getClosest(caster, gameInstance, closerData)
-		if caster.coordinates.Y > closestEnemy.coordinates.Y then
-			direction = Directions.UP
-		elseif caster.coordinates.Y < closestEnemy.coordinates.Y then
-			direction = Directions.DOWN
-		else
-			print("already on same level")
-			return 
-		end
-	elseif self.effectData.direction == Directions.AWAY_Y then
-		local enemyCoords = TargetHelper.getClosest(caster, gameInstance, cardData).coordinates
-		local potentialCoords1 = caster.coordinates + Directions.DOWN
-		local potentialCoords2 = caster.coordinates + Directions.UP
-		if gameInstance.board:getNode(potentialCoords1) and 
-			math.abs(potentialCoords1.Y - enemyCoords.Y) >= math.abs(potentialCoords2.Y - enemyCoords.Y) and 
-			math.abs(potentialCoords1.Y - enemyCoords.Y) >= math.abs(caster.coordinates.Y - enemyCoords.Y) then
-			direction = Directions.DOWN
-		elseif gameInstance.board:getNode(potentialCoords2) and 
-			math.abs(potentialCoords2.Y - enemyCoords.Y) >= math.abs(potentialCoords1.Y - enemyCoords.Y) and 
-			math.abs(potentialCoords2.Y - enemyCoords.Y) >= math.abs(caster.coordinates.Y - enemyCoords.Y) then
-			direction = Directions.UP
-		else
-			print("best solution is to stay still")
-			return
-		end
-	end]]
 	for _, target in ipairs(effectTargets)  do
 		gameInstance:moveTarget(caster, target, direction, self.effectData.value)
 	end 

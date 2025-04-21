@@ -3,6 +3,7 @@ local GameEvents = {
 	GAME_START = "Game Start",
 	FINISH_GAME = "Game Finished",
 	LOADED_UNIT = "Loaded Unit",
+	BEFORE_MOVE = "Before Moving",
 	MOVED = "Moved",
 	ATTACKING = "Attacking",
 	BEFORE_DAMAGE = "Before Damage",

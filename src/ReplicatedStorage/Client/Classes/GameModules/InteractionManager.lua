@@ -14,9 +14,7 @@ local GameActions = require(Enums.GameActions)
 local Directions = require(Enums.Directions)
 
 local GuiUtils = require(Helpers.GuiUtils)
-local TargetingRules = require(Helpers.GameInstance.TargetingRules)
 local ClientCardExecutionContext = require(Helpers.GameInstance.Classes.ClientCardExecutionContext)
-local ContextType = require(Helpers.GameInstance.Classes.CardExecutionContextType)
 
 local InteractionManager = {}
 InteractionManager.__index = InteractionManager

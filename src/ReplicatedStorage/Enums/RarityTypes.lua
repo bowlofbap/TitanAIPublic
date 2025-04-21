@@ -1,12 +1,12 @@
 local rarityTypes = {
 	STARTER = {
 		label = "Starter",
-		color = Color3.new(0.983368, 0.987518, 1),
+		color = Color3.new(0.479728, 0.485435, 0.485435),
 		price = 25
 	},
 	COMMON = {
 		label = "Common",
-		color = Color3.new(0.479728, 0.485435, 0.485435),
+		color = Color3.new(0.983368, 0.987518, 1),
 		price = 50
 	},
 	RARE = {

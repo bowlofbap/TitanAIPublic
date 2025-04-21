@@ -60,7 +60,7 @@ return function()
 			expect(CurrentInstance._turnCount).to.equal(1)
 			expect(CurrentInstance._isPlaying).to.equal(true)
 			expect(CurrentInstance.isPlayerTurn).to.equal(true)
-			expect(#CurrentInstance.unitHolder:getAll()).to.equal(2)
+			expect(#CurrentInstance.unitHolder:getAll()).to.equal(#MockedStageData.units + 1)
 		end)
 
 		it("Confirms ChestInstance is initalized correctly", function()

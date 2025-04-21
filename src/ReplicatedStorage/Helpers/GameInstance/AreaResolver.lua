@@ -11,7 +11,6 @@ end
 function AreaResolver.getUnitsInNodes(nodes, context: ContextType.context)
 	local units = {}
 	local cardData = context:getCardData()
-	local caster = context:getCardData()
 	local effectTargets = context:getTargetGroupFromCardData(cardData.effectChoice)
 	for _, node in ipairs(nodes) do
 		local unit = node:getOccupyingUnit()
@@ -24,7 +23,6 @@ end
 
 function AreaResolver.getNodesInRadius(primaryCoordinates, radius, context: ContextType.context)
 	local affectedNodes = {}
-	local cardData = context:getCardData()
 	--this is an implementation for a circular aoe. we should also consider just a square radius.
 	for x = -radius, radius do
 		for y = -radius, radius do

@@ -206,8 +206,6 @@ function GameInstance:_executeCard(cardToPlay, context: ContextType.context)
 			})
 		})
 	end
-	--TODO: rework play() to be taking in context
-	--cardToPlay:play(context)
 	cardToPlay:play(primaryTargets, effectTargets, self, context)
 end
 
@@ -273,10 +271,12 @@ function GameInstance:moveTarget(caster, target, direction, value)
 	local newCoordinates = target.coordinates + direction
 	--TODO: fix out of bounds issue here
 	if newCoordinates.X > 0 and newCoordinates.Y > 0 and newCoordinates.X < Constants.BOARD_SIZE.X+1 and newCoordinates.Y < Constants.BOARD_SIZE.Y+1 then
-		if not target:getStatus(StatusTypes.ROOT_DEBUFF) then
-			if not self.board:isNodeAtCoordsOccupied(newCoordinates) then
-				local targetNode = self.board:getNode(newCoordinates)
-				local previousNode = self.board:getNode(oldCoordinates)
+		if not self.board:isNodeAtCoordsOccupied(newCoordinates) then
+			local moveData = {canMove = true}
+			local targetNode = self.board:getNode(newCoordinates)
+			local previousNode = self.board:getNode(oldCoordinates)
+			self:fireGameEvent(GameEventsTypes.BEFORE_MOVE, {target = target, oldNode = previousNode, newNode = targetNode, moveData = moveData})
+			if moveData.canMove then
 				if targetNode.Team == target.Team then
 					self.board:occupyNodeAt(newCoordinates, target)
 					target:moveToNode(targetNode)
@@ -292,11 +292,9 @@ function GameInstance:moveTarget(caster, target, direction, value)
 				else
 					warn("not on same team")
 				end
-			else
-				warn("not an available node")
 			end
 		else
-			warn("rooted")
+			warn("not an available node")
 		end
 	else
 		warn("out of bounds")	

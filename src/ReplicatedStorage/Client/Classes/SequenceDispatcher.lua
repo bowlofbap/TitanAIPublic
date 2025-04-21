@@ -16,7 +16,6 @@ end
 -- Register handler functions
 function SequenceDispatcher:register(updateType, handler)
 	self._handlers[updateType] = handler
-	print(updateType)
 end
 
 -- Enqueue a new sequence (called by the RemoteEvent listener)

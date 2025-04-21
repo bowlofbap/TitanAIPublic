@@ -3,25 +3,6 @@ local NodeTypes = require(game:GetService("ReplicatedStorage").Enums.GameInstanc
 local Node = {}
 Node.__index = Node
 
-local teamColorKey = {
-	[1] = Color3.new(0.318914, 0.543145, 1),
-	[2] = Color3.new(1, 0.357702, 0.251545)
-}
-
-local changeableModelProperties = {
-	Parent = true,
-	Name = true,
-}
-
-local changeablePartProperties = {
-	
-}
-
-local changeableAttributes = {
-	Team = true,
-	Id = true
-}
-
 function Node.new()
 	local self = setmetatable({}, Node)
 	self.coordinates = Vector2.new(0, 0)

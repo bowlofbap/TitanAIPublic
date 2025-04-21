@@ -99,7 +99,7 @@ StatusTypes = {
 		image="",
 		defaultTickable = true, 
 		stackable = false,
-		class = "Status",
+		class = "RootStatus",
 		isBuff = false,
 	},
 	
