@@ -6,3 +6,4 @@ realm = "shared"
 
 [dependencies]
 TestEZ = "bowlofbap/testez@0.4.2-junit.6"
+ProfileStore = "bowlofbap/profilestore@0.1.0"

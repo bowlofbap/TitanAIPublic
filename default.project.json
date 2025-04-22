@@ -10,6 +10,18 @@
       },
       "ReplicatedStorage": {
         "$className": "ReplicatedStorage",
+        "Packages": {
+              "$className": "Folder",
+              "_Index": {
+                "$className": "Folder",
+                "bowlofbap_profilestore@0.1.0": {
+                    "$path": "Packages/_Index/bowlofbap_profilestore@0.1.0"
+                }
+              },
+              "ProfileStore":{
+                "$path": "Packages/ProfileStore.lua"
+              }
+        },
         "Client": {
             "$path": "src/ReplicatedStorage/Client"
         },

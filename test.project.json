@@ -10,19 +10,7 @@
       },
       "ReplicatedStorage": {
         "Packages": {
-              "$className": "Folder",
-              "_Index": {
-                "$className": "Folder",
-                "bowlofbap_testez@0.4.2-junit.6": {
-                    "$className": "Folder",
-                    "testez": {
-                        "$path": "Packages/_Index/bowlofbap_testez@0.4.2-junit.6/testez/src"
-                    }
-                }
-              },
-              "TestEZ":{
-                "$path": "Packages/TestEZ.lua"
-              }
+            "$path": "Packages"
         },
         "$className": "ReplicatedStorage",
         "TestRunner":{
