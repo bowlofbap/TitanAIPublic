@@ -93,7 +93,7 @@ function Unit:tickStatus()
 	self.statusManager:tick()
 end
 
-function Unit:applyStatus(effectData, eventObserver, gameInstance, deckManager, playerState)
+function Unit:applyStatus(statusType, value, eventObserver, gameInstance, deckManager, playerState)
 	--[[
 			{ 
 				effectType = EffectTypes.TYPE, 
@@ -101,7 +101,7 @@ function Unit:applyStatus(effectData, eventObserver, gameInstance, deckManager, 
 				value = VALUE,
 			}
 	]]
-	self.statusManager:add(effectData, self, eventObserver, gameInstance, deckManager, playerState)
+	self.statusManager:add(statusType, value, self, eventObserver, gameInstance, deckManager, playerState)
 end
 
 function Unit:removeStatus(statusType, value)

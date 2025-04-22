@@ -266,7 +266,7 @@ function GameInstance:deployUnit(caster, targetNodes, deployData, card)
 	--self:updatePlayableCards()
 end
 
-function GameInstance:moveTarget(caster, target, direction, value)
+function GameInstance:moveTarget(caster, target, direction, value, force)
 	local oldCoordinates = target.coordinates
 	local newCoordinates = target.coordinates + direction
 	--TODO: fix out of bounds issue here
@@ -276,7 +276,7 @@ function GameInstance:moveTarget(caster, target, direction, value)
 			local targetNode = self.board:getNode(newCoordinates)
 			local previousNode = self.board:getNode(oldCoordinates)
 			self:fireGameEvent(GameEventsTypes.BEFORE_MOVE, {target = target, oldNode = previousNode, newNode = targetNode, moveData = moveData})
-			if moveData.canMove then
+			if force or moveData.canMove then
 				if targetNode.Team == target.Team then
 					self.board:occupyNodeAt(newCoordinates, target)
 					target:moveToNode(targetNode)
