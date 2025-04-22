@@ -109,5 +109,19 @@ function Tables.strip(tbl, key)
 	return stripped
 end
 
+function Tables.removeDuplicates(tbl)
+	local seen = {}
+	local result = {}
+
+	for _, value in ipairs(tbl) do
+		if not seen[value] then
+			seen[value] = true
+			table.insert(result, value)
+		end
+	end
+
+	return result
+end
+
 
 return Tables

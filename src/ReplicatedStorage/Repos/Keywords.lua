@@ -54,13 +54,21 @@ local Keywords = {
 		name = "Charge",
 		description = "Grants energy equal to value at start of turn"
 	},
+	Trace = {
+		name = "Trace",
+		description = "Applies one Mark when dealing damage"
+	},
 	
 
 	--TILES
 	Electrocharged = {
 		name = "Electrocharged",
 		description = "Applies one Charge while standing on Tile"
-	}
+	},
+	Traced = {
+		name = "Traced",
+		description = "Applies one Trace while standing on Tile"
+	},
 }
 
 return Keywords

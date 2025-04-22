@@ -84,7 +84,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = nil
@@ -117,7 +117,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = nil
@@ -152,7 +152,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = nil
@@ -194,7 +194,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = nil
@@ -230,7 +230,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = caster.coordinates + Vector2.new(1,0)
@@ -269,7 +269,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = CurrentInstance.unitHolder:getEnemies(caster.Team)[1].coordinates
@@ -307,7 +307,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = CurrentInstance.unitHolder:getEnemies(caster.Team)[1].coordinates
@@ -346,7 +346,7 @@ return function()
 				setupGameInstance(2)
 				
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = nil
@@ -380,7 +380,7 @@ return function()
 				setupGameInstance(1)
 				
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = nil
@@ -422,7 +422,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = CurrentInstance.unitHolder:getEnemies(caster.Team)[1].coordinates
@@ -459,7 +459,7 @@ return function()
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(cardName)
 				local caster = CurrentInstance.player.unit
 				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
 				local targetCoordinates = caster.coordinates
@@ -476,6 +476,46 @@ return function()
 				EventObserver:subscribeTo(GameEvents.CHANGE_TILE, function(data)
 					expect(data.source).to.equal(caster)
 					expect(data.nodeType).to.equal(testingCard.cardData.effects[1].value)
+					eventChecks+=1
+				end)
+				--expect(TargetingRules.canBePlayed(context)).to.equal(true)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, context)
+	
+				--assert
+				expect(eventChecks).to.equal(2)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC010"
+			beforeEach(function()
+				testCardName = cardName
+				upgraded = false
+				setupGameInstance(1)
+			end)
+
+			it("Confirms that ".. cardName .." is executes correctly", function()
+				--setup
+				CurrentInstance:start(cardName)
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				EventObserver:subscribeTo(GameEvents.APPLYING_STATUS, function(data)
+					expect(data.target).to.equal(caster)
+					expect(data.statusType).to.equal(StatusTypes.TRACE_BUFF)
+					eventChecks+=1
+				end)
+				EventObserver:subscribeTo(GameEvents.CHANGE_TILE, function(data)
+					expect(data.source).to.equal(caster)
+					expect(data.nodeType).to.equal(testingCard.cardData.effects[1].value)
+					eventChecks+=1
 				end)
 				expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	

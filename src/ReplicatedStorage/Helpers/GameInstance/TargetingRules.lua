@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Enums = ReplicatedStorage.Enums
 
 local CardUtils = require(ReplicatedStorage.Helpers.CardUtils)
+local Tables = require(ReplicatedStorage.Helpers.Tables)
 local AreaResolver = require(ReplicatedStorage.Helpers.GameInstance.AreaResolver)
 local ContextType = require(ReplicatedStorage.Helpers.GameInstance.Classes.CardExecutionContextType)
 
@@ -56,40 +57,44 @@ function TargetingRules.getEffectTargets(primaryTargets: table, context: Context
 	local cardData = context:getCardData()
 	local radius = cardData.radius or 0
 	local effectTargets = {}
-	
-	if CardUtils.hasTag(cardData, CardAttributeTags.AFFECTS_TILE) then 
+
+	local affectsTiles = CardUtils.hasTag(cardData, CardAttributeTags.AFFECTS_TILE)
+	local affectsUnits = CardUtils.hasTag(cardData, CardAttributeTags.AFFECTS_UNIT)
+	local isSelectNode = cardData.targetType == TargetTypes.SELECT_NODE
+
+	if affectsTiles then
 		effectTargets = TargetingRules.getEffectAreaNodes(primaryTargets, context)
+		return effectTargets
 	end
-	
+
 	for _, target in ipairs(primaryTargets) do
-		if radius == 0 then
-			if cardData.targetType == TargetTypes.SELECT_NODE then
-				if CardUtils.hasTag(cardData, CardAttributeTags.AFFECTS_UNIT) then
-					if target:getOccupyingUnit() then
-						table.insert(effectTargets, target:getOccupyingUnit())
-					end
-				else
-					table.insert(effectTargets, target)
-				end
-			else
-				table.insert(effectTargets, target)
-			end
-		else
-			if cardData.targetType == TargetTypes.SELECT_NODE and not CardUtils.hasTag(cardData, CardAttributeTags.AFFECTS_UNIT) then
-				local nodes = AreaResolver.getNodesInRadius(target.coordinates, cardData.radius, context)
+		if radius > 0 then
+			if isSelectNode and not affectsUnits then
+				local nodes = AreaResolver.getNodesInRadius(target.coordinates, radius, context)
 				for _, node in ipairs(nodes) do
 					table.insert(effectTargets, node)
 				end
 			else
-				local units = AreaResolver.getUnitsInRadius(target.coordinates, cardData.radius, context)
+				local units = AreaResolver.getUnitsInRadius(target.coordinates, radius, context)
 				for _, unit in ipairs(units) do
 					table.insert(effectTargets, unit)
 				end
 			end
+		else
+			if isSelectNode and affectsUnits then
+				local unit = target:getOccupyingUnit()
+				if unit then
+					table.insert(effectTargets, unit)
+				end
+			else
+				table.insert(effectTargets, target)
+			end
 		end
 	end
-	return effectTargets
+
+	return Tables.removeDuplicates(effectTargets)
 end
+
 
 function TargetingRules.getEffectAreaNodes(primaryTargets, context: ContextType.context)
 	local cardData = context:getCardData()
@@ -107,7 +112,7 @@ function TargetingRules.getEffectAreaNodes(primaryTargets, context: ContextType.
 			end
 		end
 	end
-	return effectAreaNodes
+	return Tables.removeDuplicates(effectAreaNodes)
 end
 
 function TargetingRules.getInRangeNodes(primaryTargets, context: ContextType.context)

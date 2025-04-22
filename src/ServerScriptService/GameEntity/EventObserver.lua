@@ -8,6 +8,10 @@ function EventObserver.new()
 	return self
 end
 
+function EventObserver:loadLogName(name)
+	self._logName = name
+end
+
 function EventObserver:subscribeTo(eventName, callback)
 	self._listeners[eventName] = self._listeners[eventName] or {}
 	local listenerId = self._nextId + 1
@@ -23,7 +27,11 @@ function EventObserver:subscribeTo(eventName, callback)
 end
 
 function EventObserver:emit(eventName, ...)
-	print("[EVENT_OBSERVER]", eventName, ...)
+	local printString = "[EVENT_OBSERVER]"
+	if self._logName then
+		printString = printString.."-[".. self._logName .."]"
+	end
+	print(printString, eventName, ...)
 	local listeners = self._listeners[eventName]
 	if not listeners then return end
 

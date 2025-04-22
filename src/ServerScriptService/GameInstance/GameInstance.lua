@@ -574,7 +574,8 @@ function GameInstance:drawCards(numCards)
 end
 
 --called to initiate the game
-function GameInstance:start()
+function GameInstance:start(testLogName)
+	self.eventObserver:loadLogName(testLogName)
 	self:loadPlayer(self.playerState)
 	self:loadStage(self.stageData)
 	self.stateSyncBuffer:add(StateUpdate.new(UiActions.SHOW_GUI, {guiName = "BattleGui"}))

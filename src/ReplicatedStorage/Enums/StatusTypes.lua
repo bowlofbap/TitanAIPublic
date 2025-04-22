@@ -118,6 +118,15 @@ StatusTypes = {
 		class = "ChargeStatus",
 		isBuff = true,
 	},
+	TRACE_BUFF = {
+		name = "Trace", 
+		image="",
+		defaultTickable = false, 
+		stackable = true,
+		class = "ApplyStatusOnHit",
+		targetStatusKey = "MARK_DEBUFF",
+		isBuff = true,
+	},
 	
 	--[[CUSTOM EFFECTS]]--
 	OVERLOAD_BUFF = {

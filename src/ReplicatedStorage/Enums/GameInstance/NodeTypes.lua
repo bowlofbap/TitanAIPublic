@@ -46,7 +46,7 @@ local types = {
 		onLeave = function(unit, gameInstance)
 			gameInstance:removeStatus({unit}, StatusTypes.STRENGTH_BUFF, 5)
 		end,
-		color = Color3.new(0.579751, 0.977432, 0.464149)
+		color = Color3.new(0.976471, 0.462745, 0.462745)
 	},
 	ELECTROCHARGED = {
 		name = "Electrocharged Tile",
@@ -57,6 +57,16 @@ local types = {
 			gameInstance:removeStatus({unit}, StatusTypes.CHARGE_BUFF, 1)
 		end,
 		color = Color3.new(0.462745, 0.968627, 0.976471)
+	},
+	TRACED = {
+		name = "Traced Tile",
+		onEnter = function(eventObserver, unit, gameInstance)
+			gameInstance:applyStatus(unit, {unit}, StatusTypes.TRACE_BUFF, 1)
+		end,
+		onLeave = function(unit, gameInstance)
+			gameInstance:removeStatus({unit}, StatusTypes.TRACE_BUFF, 1)
+		end,
+		color = Color3.new(0.886275, 0.482353, 0.294118)
 	}
 }
 

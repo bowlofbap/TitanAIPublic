@@ -190,5 +190,37 @@ return function()
 				expect(#CurrentInstance.player:getHand()).to.equal(previousCardNumber + testStatusValue)
 			end)
 		end)
+
+		describe("StatusTest", function()
+            local statusType = StatusTypes.TRACE_BUFF
+			beforeEach(function()
+				testStatusType = statusType
+				testStatusValue = 1
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. statusType.name .." works correctly", function()
+				--setup
+				CurrentInstance:start()
+				local playerUnit = CurrentInstance.player.unit
+				local unit = CurrentInstance.unitHolder:getEnemies(playerUnit.Team)[1]
+                CurrentInstance:applyStatus(playerUnit, {playerUnit}, testStatusType, testStatusValue)
+				EventObserver:subscribeTo(GameEvents.APPLYING_STATUS, function(data)
+					expect(data.source).to.equal(playerUnit)
+					expect(data.target).to.equal(unit)
+					expect(data.statusType).to.equal(StatusTypes[statusType.targetStatusKey])
+					expect(data.value).to.equal(testStatusValue)
+					eventChecks+=1
+				end)
+				
+                --action
+				CurrentInstance:dealDamage(playerUnit, {unit}, 1, DamageTypes.DIRECT)
+				CurrentInstance:dealDamage(playerUnit, {unit}, 1, DamageTypes.DIRECT)
+                
+                --assert
+				expect(eventChecks).to.equal(2)
+				expect(unit:getStatus(StatusTypes[statusType.targetStatusKey]).value).to.equal(2)
+			end)
+		end)
     end)
 end

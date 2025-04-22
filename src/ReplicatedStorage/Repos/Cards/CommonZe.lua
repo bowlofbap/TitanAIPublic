@@ -354,7 +354,7 @@ local CardDatabase = {
 		}
 	},
 	["ZC009"] = {
-		stringName = "Overcharge Tile",
+		stringName = "Electrocharge Tile",
 		animationClass = nil,
 		tags = {
 			{
@@ -370,7 +370,7 @@ local CardDatabase = {
 		extraKeywords = {
 			Keywords.Charge
 		},
-		cardType = CardTypes.DAMAGE,
+		cardType = CardTypes.UTILITY,
 		rarity = RarityTypes.COMMON,
 		unitAnimation = AnimationTypes.ATTACKING,
 		targetType = TargetTypes.SELECT_NODE,
@@ -396,12 +396,9 @@ local CardDatabase = {
 		}
 	},
 	["ZC010"] = {
-		stringName = "Overcharge Tile",
+		stringName = "Mark Tile",
 		animationClass = nil,
 		tags = {
-			{
-				tagType = CardAttributeTags.REQUIRES_TARGET,
-			},
 			{
 				tagType = CardAttributeTags.AFFECTS_TILE,
 			},
@@ -410,24 +407,25 @@ local CardDatabase = {
 			},
 		},
 		extraKeywords = {
-			Keywords.Charge
+			Keywords.Trace,
+			Keywords.Mark
 		},
-		cardType = CardTypes.DAMAGE,
+		cardType = CardTypes.UTILITY,
 		rarity = RarityTypes.COMMON,
 		unitAnimation = AnimationTypes.ATTACKING,
-		targetType = TargetTypes.SELECT_NODE,
+		targetType = TargetTypes.SELF,
 		targetChoice = TargetChoices.NONE, 
 		effectChoice = TargetChoices.NONE, 
 		image = "rbxassetid://90356868289376",
-		description = "Change target Tile to Electrocharged.",
+		description = "Change current Tile to Traced.",
 		sound = AudioRepo.SFX.Fire,
-		cost = 2,
-		range = 3,
+		cost = 3,
+		range = 0,
 		radius = 0,
 		effects = {
 			{ 
 				effectType = EffectTypes.NODE_CHANGE, 
-				value = NodeTypes.ELECTROCHARGED
+				value = NodeTypes.TRACED
 			},
 		},
 		upgrades = {

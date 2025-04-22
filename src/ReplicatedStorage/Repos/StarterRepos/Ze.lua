@@ -40,12 +40,12 @@ local testDeck = {
 		upgraded = true
 	}, 
 	{
-		cardName = c.ZC003.key,
+		cardName = c.ZC009.key,
 		amount = 1,
 		upgraded = false
 	}, 
 	{
-		cardName = c.ZC009.key,
+		cardName = c.ZC010.key,
 		amount = 1,
 		upgraded = false
 	}, 
