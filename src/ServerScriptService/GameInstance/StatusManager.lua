@@ -9,7 +9,7 @@ function StatusManager.new()
 	return self
 end
 
-function StatusManager:add(effectType, target, eventObserver, gameInstance, deckManager, playerState)
+function StatusManager:add(statusType, value, target, eventObserver, gameInstance, deckManager, playerState)
 	--[[
 			{ 
 				effectType = EffectTypes.TYPE, 
@@ -17,21 +17,21 @@ function StatusManager:add(effectType, target, eventObserver, gameInstance, deck
 				value = VALUE,
 			}
 	]]
-	local existingStatus = self:getStatus(effectType.statusType)
+	local existingStatus = self:getStatus(statusType)
 	if not existingStatus then
-		local newStatusClass = game:GetService("ReplicatedStorage").Repos.Statuses[effectType.statusType.class]
+		local newStatusClass = game:GetService("ReplicatedStorage").Repos.Statuses[statusType.class]
 		local newStatus
 		local removeFunction = function()
 			self:remove(newStatus)
 		end
-		newStatus = require(newStatusClass).new(effectType.statusType, removeFunction) --very hacky but i want it to be thread safe
+		newStatus = require(newStatusClass).new(statusType, removeFunction) --very hacky but i want it to be thread safe
 		table.insert(self.statuses, newStatus)
-		newStatus.value = effectType.value
+		newStatus.value = value
 		newStatus.Parent = self.frame
 		newStatus:execute(target, eventObserver, gameInstance, deckManager, playerState)
 		return newStatus
 	else
-		local reapplyStatus = existingStatus:reapply(effectType.value)
+		local reapplyStatus = existingStatus:reapply(value)
 		return reapplyStatus
 	end
 end
