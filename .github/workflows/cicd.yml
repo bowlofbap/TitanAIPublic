@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: Packages
-          key: packages-j.5${{ hashFiles('wally.lock') }}
+          key: packages-j.6${{ hashFiles('wally.lock') }}
 
   luau-tests:
     name: Run Luau tests via Open Cloud
@@ -52,7 +52,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: Packages
-          key: packages-j.5${{ hashFiles('wally.lock') }}
+          key: packages-j.6${{ hashFiles('wally.lock') }}
       - name: Debug installed Wally packages
         run: ls -lR Packages/_Index
       - name: Make test.sh executable
