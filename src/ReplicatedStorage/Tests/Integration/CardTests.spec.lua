@@ -1,5 +1,5 @@
 return function()
-	describe("Instances", function()
+	describe("Cards", function()
 		local ReplicatedStorage = game:GetService("ReplicatedStorage")
 		local ServerScriptService = game:GetService("ServerScriptService")
 		local TargetingRules = require(ReplicatedStorage.Helpers.GameInstance.TargetingRules)
