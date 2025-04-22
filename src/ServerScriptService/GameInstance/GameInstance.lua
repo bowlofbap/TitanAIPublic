@@ -336,7 +336,7 @@ function GameInstance:dealDamage(source, targets, damageAmount, damageType)
 			self:fireGameEvent(GameEventsTypes.PLAYER_HEALTH_HURT_HEAL, {value = -1 * healthLost})
 		end
 		if not target.isAlive then
-			self:fireGameEvent(GameEventsTypes.DEATH, target)
+			self:fireGameEvent(GameEventsTypes.DEATH, {unit = target})
 			self.stateSyncBuffer:add(StateUpdate.new(UiActions.KILL_UNIT, {unitId = target.Id}))
 			self:removeUnitFromGame(target)
 			self:checkForGameEnd(target)

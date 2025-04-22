@@ -102,6 +102,14 @@ StatusTypes = {
 		class = "RootStatus",
 		isBuff = false,
 	},
+	MARK_DEBUFF = {
+		name = "Mark", 
+		image="",
+		defaultTickable = false, 
+		stackable = true,
+		class = "MarkStatus",
+		isBuff = false,
+	},
 	CHARGE_BUFF = {
 		name = "Charge", 
 		image="",

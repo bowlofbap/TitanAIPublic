@@ -46,6 +46,10 @@ local Keywords = {
 		name = "Root",
 		description = "Prevents from moving until end of turn"
 	},
+	Mark = {
+		name = "Mark",
+		description = "When unit dies, grant energy equal to amount and draw half the amount of cards."
+	},
 	Charge = {
 		name = "Charge",
 		description = "Grants energy equal to value at start of turn"

@@ -6,6 +6,7 @@ return function()
 		local GameEvents = require(ReplicatedStorage.Enums.GameEvents)
 		local StatusTypes = require(ReplicatedStorage.Enums.StatusTypes)
         local EffectTypes = require(ReplicatedStorage.Enums.EffectTypes)
+		local DamageTypes = require(ReplicatedStorage.Enums.DamageTypes)
 		local MockedPlayer
 		local MockedData
 		local MapNodeTypes
@@ -31,8 +32,8 @@ return function()
 			MockedData = require(ReplicatedStorage.Repos.StarterRepos.TestData)
             local testDeck = {
                 {
-                    cardName = testCardName,
-                    amount = 1,
+                    cardName = "E001",
+                    amount = 15,
                     upgraded = false
                 },
             }
@@ -161,6 +162,32 @@ return function()
                 --assert
 				expect(unit:getStatus(testStatusType).value).to.equal(testStatusValue*2)
 				expect(CurrentInstance.player.energy).to.equal(CurrentInstance.player.turnEnergy + testStatusValue * 2)
+			end)
+		end)
+
+		describe("StatusTest", function()
+            local statusType = StatusTypes.MARK_DEBUFF
+			beforeEach(function()
+				testStatusType = statusType
+				testStatusValue = 2
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. statusType.name .." works correctly", function()
+				--setup
+				CurrentInstance:start()
+				local playerUnit = CurrentInstance.player.unit
+				local unit = CurrentInstance.unitHolder:getEnemies(playerUnit.Team)[1]
+                CurrentInstance:applyStatus(playerUnit, {unit}, testStatusType, testStatusValue)
+                --testing that it does stack
+                CurrentInstance:applyStatus(playerUnit, {unit}, testStatusType, testStatusValue) 
+				local previousCardNumber = #CurrentInstance.player:getHand()
+                --action
+				CurrentInstance:dealDamage(playerUnit, {unit}, unit.health, DamageTypes.DIRECT)
+                
+                --assert
+				expect(CurrentInstance.player.energy).to.equal(CurrentInstance.player.turnEnergy + testStatusValue * 2)
+				expect(#CurrentInstance.player:getHand()).to.equal(previousCardNumber + testStatusValue)
 			end)
 		end)
     end)
