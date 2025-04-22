@@ -22,8 +22,9 @@ return function()
 		local dependencies
         local testCardName 
 		local eventChecks = 0
+		local upgraded = false
 
-		local function setupGameInstance()
+		local function setupGameInstance(testLevel)
 			print("setting up for new instance") 
 			eventChecks = 0
 			MockedPlayer = Instance.new("Part")
@@ -32,7 +33,7 @@ return function()
                 {
                     cardName = testCardName,
                     amount = 1,
-                    upgraded = false
+                    upgraded = upgraded
                 },
             }
             MockedData.deck = testDeck
@@ -46,7 +47,7 @@ return function()
 				return CurrentInstance
 			end)
 			MockedPosition = Vector3.new(0,0,0)
-			MockedStageData = require(ReplicatedStorage.Stages.Level1).test[1]
+			MockedStageData = require(ReplicatedStorage.Stages.Level1).test[testLevel]
 			dependencies = {
 				mapNodeType = MapNodeTypes.REGULAR_ENEMY, 
 				robloxPlayer = MockedPlayer, 
@@ -77,7 +78,8 @@ return function()
 			local cardName = "E001"
 			beforeEach(function()
 				testCardName = cardName
-				setupGameInstance()
+				upgraded = false
+				setupGameInstance(1)
 			end)
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
@@ -109,7 +111,8 @@ return function()
 			local cardName = "ZC001"
 			beforeEach(function()
 				testCardName = cardName
-				setupGameInstance()
+				upgraded = false
+				setupGameInstance(1)
 			end)
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
@@ -143,7 +146,8 @@ return function()
 			local cardName = "ZC002"
 			beforeEach(function()
 				testCardName = cardName
-				setupGameInstance()
+				upgraded = false
+				setupGameInstance(1)
 			end)
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
@@ -184,7 +188,8 @@ return function()
 			local cardName = "ZC003"
 			beforeEach(function()
 				testCardName = cardName
-				setupGameInstance()
+				upgraded = false
+				setupGameInstance(1)
 			end)
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
@@ -219,7 +224,8 @@ return function()
 			local cardName = "ZC004"
 			beforeEach(function()
 				testCardName = cardName
-				setupGameInstance()
+				upgraded = false
+				setupGameInstance(1)
 			end)
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
@@ -257,7 +263,8 @@ return function()
 			local cardName = "ZC005"
 			beforeEach(function()
 				testCardName = cardName
-				setupGameInstance()
+				upgraded = false
+				setupGameInstance(1)
 			end)
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
@@ -294,7 +301,8 @@ return function()
 			local cardName = "ZC006"
 			beforeEach(function()
 				testCardName = cardName
-				setupGameInstance()
+				upgraded = false
+				setupGameInstance(1)
 			end)
 
 			it("Confirms that ".. cardName .." is executes correctly", function()
@@ -324,6 +332,83 @@ return function()
 	
 				--assert
 				expect(eventChecks).to.equal(3)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC007"
+			beforeEach(function()
+				testCardName = cardName
+			end)
+
+			it("Confirms that ".. cardName .." pushes correctly", function()
+				upgraded = false
+				setupGameInstance(2)
+				
+				--setup
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local expectedEnemies = TargetingRules.getValidTargets(context)
+				EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
+					expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
+					expect(data.target).to.equal(expectedEnemies[1])
+					eventChecks+=1
+				end)
+
+				EventObserver:subscribeTo(GameEvents.MOVED, function(data)
+					expect(data.target).to.equal(expectedEnemies[1])
+					expect(data.source).to.equal(caster)
+					eventChecks+=1
+				end)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, context)
+	
+				--assert
+				expect(eventChecks).to.equal(2)
+			end)
+
+			it("Confirms that ".. cardName .." fails to push and applies status", function()
+				upgraded = false
+				setupGameInstance(1)
+				
+				--setup
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local expectedEnemies = TargetingRules.getValidTargets(context)
+				local previousCoordinates = expectedEnemies[1].coordinates
+				EventObserver:subscribeTo(GameEvents.AFTER_DAMAGE, function(data)
+					expect(data.healthLost).to.equal(testingCard.cardData.effects[1].value)
+					expect(data.target).to.equal(expectedEnemies[1])
+					eventChecks+=1
+				end)
+				EventObserver:subscribeTo(GameEvents.APPLYING_STATUS, function(data)
+					expect(data.source).to.equal(caster)
+					expect(data.target).to.equal(expectedEnemies[1])
+					expect(data.statusType).to.equal(testingCard.cardData.effects[2].statusType)
+					eventChecks+=1
+				end)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, context)
+	
+				--assert
+				expect(expectedEnemies[1].coordinates).to.equal(previousCoordinates)
+				expect(eventChecks).to.equal(2)
 			end)
 		end)
     end)

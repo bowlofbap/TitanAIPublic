@@ -130,6 +130,9 @@ return function()
 
                 --assert
                 expect(unit.coordinates).to.equal(originalCoords)
+
+				--act
+				passTurn()
                 
                 --assert
 				expect(unit:getStatus(statusType)).never.to.be.ok()

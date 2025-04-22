@@ -277,6 +277,48 @@ local CardDatabase = {
 			},
 		}
 	},
+	["ZC007"] = {
+		stringName = "Overload Pulse",
+		animationClass = nil,
+		tags = {
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET,
+			},
+		},
+		cardType = CardTypes.DAMAGE,
+		rarity = RarityTypes.COMMON,
+		unitAnimation = AnimationTypes.ATTACKING,
+		targetType = TargetTypes.FIRST,
+		targetChoice = TargetChoices.ENEMY, 
+		effectChoice = TargetChoices.ENEMY, 
+		image = "rbxassetid://90356868289376",
+		description = "Deals {1.value} damage to FIRST enemy and moves it back one Tile. If unable, apply Root to enemy.",
+		upgradedDescription = "Deals {1.value} damage to FIRST enemy, applies Root, and moves it back one Tile",
+		sound = AudioRepo.SFX.Fire,
+		cost = 2,
+		range = 3,
+		radius = 0,
+		effects = {
+			{ 
+				effectType = EffectTypes.DAMAGE, 
+				damageType = DamageTypes.DIRECT,
+				value = 11
+			},
+			{
+				effectType = EffectTypes.CUSTOM,
+				customEffect = CustomEffects.MoveAndStatusIfFail,
+				direction = Directions.AWAY_X,
+				statusType = StatusTypes.ROOT_DEBUFF,
+				value = 1
+			}
+		},
+		upgrades = {
+			{
+				stat = "1.value",
+				value = 2
+			},
+		}
+	},
 }
 
 return CardDatabase

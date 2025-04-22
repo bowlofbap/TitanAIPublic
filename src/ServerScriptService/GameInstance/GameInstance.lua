@@ -266,7 +266,7 @@ function GameInstance:deployUnit(caster, targetNodes, deployData, card)
 	--self:updatePlayableCards()
 end
 
-function GameInstance:moveTarget(caster, target, direction, value, force)
+function GameInstance:moveTarget(caster, target, direction, value)
 	local oldCoordinates = target.coordinates
 	local newCoordinates = target.coordinates + direction
 	--TODO: fix out of bounds issue here
@@ -276,14 +276,14 @@ function GameInstance:moveTarget(caster, target, direction, value, force)
 			local targetNode = self.board:getNode(newCoordinates)
 			local previousNode = self.board:getNode(oldCoordinates)
 			self:fireGameEvent(GameEventsTypes.BEFORE_MOVE, {target = target, oldNode = previousNode, newNode = targetNode, moveData = moveData})
-			if force or moveData.canMove then
+			if caster ~= target or moveData.canMove then --other users can move the target regardless of canMove
 				if targetNode.Team == target.Team then
 					self.board:occupyNodeAt(newCoordinates, target)
 					target:moveToNode(targetNode)
 					self.board:unoccupyNodeAt(oldCoordinates)
 					targetNode:enable(self.eventObserver, target, self)
 					previousNode:disable(target, self)
-					self:fireGameEvent(GameEventsTypes.MOVED, {target = target, oldNode = previousNode, newNode = targetNode})
+					self:fireGameEvent(GameEventsTypes.MOVED, {target = target, source = caster, oldNode = previousNode, newNode = targetNode})
 					self.stateSyncBuffer:addAwaitingStep()
 					self.stateSyncBuffer:add(StateUpdate.new(UiActions.MOVE_UNIT, {unitId = target.Id, coordinates = target.coordinates}))
 					self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_NODE, targetNode:serialize()))
@@ -437,7 +437,9 @@ end
 function GameInstance:applyStatus(source, targets, statusType, value)
 	self.stateSyncBuffer:addAwaitingStep()
 	for _, target in ipairs(targets) do
+		self:fireGameEvent(GameEventsTypes.BEFORE_APPLY_STATUS, {statusType = statusType, value = value, source = source, target = target})
 		target:applyStatus(statusType, value, self.eventObserver, self, self.deckManager, self.playerState)
+		self:fireGameEvent(GameEventsTypes.APPLYING_STATUS, {statusType = statusType, value = value, source = source, target = target})
 		self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_STATUS, {
 			unitId = target.Id,
 			statusData = target.statusManager:serialize()

@@ -15,7 +15,6 @@ function CustomStatus:execute(target, eventObserver, gameInstance, deckManager, 
 	local unsubscribe = eventObserver:subscribeTo(GameEvents.BEFORE_MOVE, function(data)
 		if data.target == target then
 			data.moveData.canMove = false
-			self:setValue(0)
 		end
 	end)
 	table.insert(self._unsubscribes, unsubscribe)

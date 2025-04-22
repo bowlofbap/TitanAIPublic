@@ -43,7 +43,7 @@ local Keywords = {
 	},
 	Root = {
 		name = "Root",
-		description = "Prevents from moving"
+		description = "Prevents from moving until end of turn"
 	}
 }
 

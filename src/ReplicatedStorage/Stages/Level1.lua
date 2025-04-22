@@ -19,6 +19,19 @@ local Level1 = {
 				RewardTypes.ECHO_COMMON
 			}
 		},
+		{
+			units = {
+				{
+					name = "TestEnemy",
+					position = Vector2.new(1, 2)
+				},
+			},
+			rewards = {
+				RewardTypes.MONEY_SMALL,
+				RewardTypes.CARDS_BASIC,
+				RewardTypes.ECHO_COMMON
+			}
+		},
 	},
 	tier1 = {
 		{
