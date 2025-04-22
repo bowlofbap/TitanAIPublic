@@ -514,7 +514,7 @@ function GameInstance:grantEnergy(unit, value)
 	end
 end
 
-function GameInstance:changeNodeType(node, nodeType)
+function GameInstance:changeNodeType(node, nodeType, source)
 	local units = self.unitHolder:getAll()
 	local onTileUnit = nil
 	for _, unit in ipairs(units) do
@@ -533,6 +533,7 @@ function GameInstance:changeNodeType(node, nodeType)
 	if onTileUnit then
 		node:enable(self.eventObserver, onTileUnit, self)
 	end
+	self:fireGameEvent(GameEventsTypes.CHANGE_TILE, {nodeType = nodeType, source = source})
 	self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_NODE, node:serialize()))
 end
 

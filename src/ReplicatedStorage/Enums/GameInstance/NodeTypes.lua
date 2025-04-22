@@ -41,12 +41,22 @@ local types = {
 	STRENGTH = {
 		name = "Strength Tile",
 		onEnter = function(eventObserver, unit, gameInstance)
-			gameInstance:applyStatus(unit, {unit}, {statusType = StatusTypes.STRENGTH_BUFF, value = 5})
+			gameInstance:applyStatus(unit, {unit}, StatusTypes.STRENGTH_BUFF, 5)
 		end,
 		onLeave = function(unit, gameInstance)
 			gameInstance:removeStatus({unit}, StatusTypes.STRENGTH_BUFF, 5)
 		end,
 		color = Color3.new(0.579751, 0.977432, 0.464149)
+	},
+	ELECTROCHARGED = {
+		name = "Electrocharged Tile",
+		onEnter = function(eventObserver, unit, gameInstance)
+			gameInstance:applyStatus(unit, {unit}, StatusTypes.CHARGE_BUFF, 1)
+		end,
+		onLeave = function(unit, gameInstance)
+			gameInstance:removeStatus({unit}, StatusTypes.CHARGE_BUFF, 1)
+		end,
+		color = Color3.new(0.462745, 0.968627, 0.976471)
 	}
 }
 

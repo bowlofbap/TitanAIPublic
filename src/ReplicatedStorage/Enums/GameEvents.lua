@@ -24,6 +24,7 @@ local GameEvents = {
 	OPENING_CARD_PACK = "Opening card pack",
 	HEALTH_CHANGED = "Health Changed",
 	GRANT_ENERGY = "Grant Energy",
+	CHANGE_TILE = "Change Tile",
 	
 	--GAME ENTITY EVENTS--
 	PLAYER_HEALTH_CHANGED = "Player Health Changed", -- for maxhealth as well

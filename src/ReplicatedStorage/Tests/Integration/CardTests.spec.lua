@@ -448,5 +448,43 @@ return function()
 				expect(eventChecks).to.equal(1)
 			end)
 		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC009"
+			beforeEach(function()
+				testCardName = cardName
+				upgraded = false
+				setupGameInstance(1)
+			end)
+
+			it("Confirms that ".. cardName .." is executes correctly", function()
+				--setup
+				CurrentInstance:start()
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = caster.coordinates
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				EventObserver:subscribeTo(GameEvents.APPLYING_STATUS, function(data)
+					expect(data.target).to.equal(caster)
+					expect(data.statusType).to.equal(StatusTypes.CHARGE_BUFF)
+					eventChecks+=1
+				end)
+				EventObserver:subscribeTo(GameEvents.CHANGE_TILE, function(data)
+					expect(data.source).to.equal(caster)
+					expect(data.nodeType).to.equal(testingCard.cardData.effects[1].value)
+				end)
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData, context)
+	
+				--assert
+				expect(eventChecks).to.equal(2)
+			end)
+		end)
     end)
 end

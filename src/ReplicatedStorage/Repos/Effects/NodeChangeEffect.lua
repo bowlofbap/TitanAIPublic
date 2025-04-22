@@ -14,7 +14,7 @@ end
 
 function NodeChangeEffect:execute(primaryTargets, effectTargets, gameInstance, context: ContextType.context)
 	for _, node in ipairs(effectTargets) do
-		gameInstance:changeNodeType(node, self.effectData.value)
+		gameInstance:changeNodeType(node, self.effectData.value, context:getCaster())
 	end
 end
 

@@ -353,6 +353,48 @@ local CardDatabase = {
 			},
 		}
 	},
+	["ZC009"] = {
+		stringName = "Overcharge Tile",
+		animationClass = nil,
+		tags = {
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET,
+			},
+			{
+				tagType = CardAttributeTags.AFFECTS_TILE,
+			},
+			{
+				tagType = CardAttributeTags.TARGETS_TILE,
+			},
+		},
+		extraKeywords = {
+			Keywords.Charge
+		},
+		cardType = CardTypes.DAMAGE,
+		rarity = RarityTypes.COMMON,
+		unitAnimation = AnimationTypes.ATTACKING,
+		targetType = TargetTypes.SELECT_NODE,
+		targetChoice = TargetChoices.NONE, 
+		effectChoice = TargetChoices.NONE, 
+		image = "rbxassetid://90356868289376",
+		description = "Change target Tile to Electrocharged.",
+		sound = AudioRepo.SFX.Fire,
+		cost = 2,
+		range = 3,
+		radius = 0,
+		effects = {
+			{ 
+				effectType = EffectTypes.NODE_CHANGE, 
+				value = NodeTypes.ELECTROCHARGED
+			},
+		},
+		upgrades = {
+			{
+				stat = "cost",
+				value = -1
+			},
+		}
+	},
 }
 
 return CardDatabase

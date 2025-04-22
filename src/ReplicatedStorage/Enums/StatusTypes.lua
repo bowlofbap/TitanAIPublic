@@ -102,6 +102,14 @@ StatusTypes = {
 		class = "RootStatus",
 		isBuff = false,
 	},
+	CHARGE_BUFF = {
+		name = "Charge", 
+		image="",
+		defaultTickable = false, 
+		stackable = true,
+		class = "ChargeStatus",
+		isBuff = true,
+	},
 	
 	--[[CUSTOM EFFECTS]]--
 	OVERLOAD_BUFF = {

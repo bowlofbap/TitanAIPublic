@@ -1,6 +1,7 @@
 local Constants = require(game:GetService("ReplicatedStorage").Helpers.Constants)
 
 local Keywords = {
+	--STATUSES--
 	Block = {
 		name = "Block",
 		description = "Prevent damage until following turn"
@@ -44,6 +45,17 @@ local Keywords = {
 	Root = {
 		name = "Root",
 		description = "Prevents from moving until end of turn"
+	},
+	Charge = {
+		name = "Charge",
+		description = "Grants energy equal to value at start of turn"
+	},
+	
+
+	--TILES
+	Electrocharged = {
+		name = "Electrocharged",
+		description = "Applies one Charge while standing on Tile"
 	}
 }
 
