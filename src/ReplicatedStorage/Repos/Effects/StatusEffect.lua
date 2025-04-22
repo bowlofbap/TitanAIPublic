@@ -13,7 +13,7 @@ function StatusEffect.new(effectData)
 end
 
 function StatusEffect:execute(primaryTargets, effectTargets, gameInstance, context: ContextType.context)
-	gameInstance:applyStatus(context:getCaster(), effectTargets, self.effectData)
+	gameInstance:applyStatus(context:getCaster(), effectTargets, self.effectData.statusType, self.effectData.value)
 end
 
 return StatusEffect

@@ -20,7 +20,8 @@ return function()
 		local MockedPosition
 		local dependencies
         local testCardName 
-        local mockedEffectData
+        local testStatusType
+		local testStatusValue
 		local eventChecks = 0
 
 		local function setupGameInstance()
@@ -76,11 +77,8 @@ return function()
 		describe("StatusTest", function()
             local statusType = StatusTypes.DAMAGE_OVER_TIME
 			beforeEach(function()
-                mockedEffectData = {
-                    effectType = EffectTypes.STATUS,
-                    statusType = statusType,
-                    value = 5
-                }
+				testStatusType = statusType
+				testStatusValue = 5
 				setupGameInstance()
 			end)
 
@@ -88,10 +86,10 @@ return function()
 				--setup
 				CurrentInstance:start()
 				local unit = CurrentInstance.player.unit
-                CurrentInstance:applyStatus(unit, {unit}, mockedEffectData)
+                CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue)
 
                 local totalLostHealth = 0
-                for i = 5, 2, -1 do 
+                for i = testStatusValue, 2, -1 do 
                     --action
                     passTurn()
 
@@ -113,11 +111,8 @@ return function()
             local Directions = require(ReplicatedStorage.Enums.Directions)
             local statusType = StatusTypes.ROOT_DEBUFF
 			beforeEach(function()
-                mockedEffectData = {
-                    effectType = EffectTypes.STATUS,
-                    statusType = statusType,
-					value = 1,
-                }
+				testStatusType = statusType
+				testStatusValue = 1
 				setupGameInstance()
 			end)
 
@@ -125,9 +120,9 @@ return function()
 				--setup
 				CurrentInstance:start()
 				local unit = CurrentInstance.player.unit
-                CurrentInstance:applyStatus(unit, {unit}, mockedEffectData)
+                CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue)
                 --testing that it doesn't stack
-                CurrentInstance:applyStatus(unit, {unit}, mockedEffectData) 
+                CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue) 
                 local originalCoords = unit.coordinates
 
                 --action

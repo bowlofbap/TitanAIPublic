@@ -434,10 +434,10 @@ function GameInstance:resetUnitBlock(unit)
 		}))
 end
 
-function GameInstance:applyStatus(source, targets, effectData)
+function GameInstance:applyStatus(source, targets, statusType, value)
 	self.stateSyncBuffer:addAwaitingStep()
 	for _, target in ipairs(targets) do
-		target:applyStatus(effectData, self.eventObserver, self, self.deckManager, self.playerState)
+		target:applyStatus(statusType, value, self.eventObserver, self, self.deckManager, self.playerState)
 		self.stateSyncBuffer:add(StateUpdate.new(UiActions.UPDATE_STATUS, {
 			unitId = target.Id,
 			statusData = target.statusManager:serialize()
