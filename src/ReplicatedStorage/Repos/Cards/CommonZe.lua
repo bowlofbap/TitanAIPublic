@@ -319,6 +319,40 @@ local CardDatabase = {
 			},
 		}
 	},
+	["ZC008"] = {
+		stringName = "Static Burst",
+		animationClass = nil,
+		tags = {
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET,
+			},
+		},
+		cardType = CardTypes.DAMAGE,
+		rarity = RarityTypes.COMMON,
+		unitAnimation = AnimationTypes.ATTACKING,
+		targetType = TargetTypes.SELECT_UNIT,
+		targetChoice = TargetChoices.ENEMY, 
+		effectChoice = TargetChoices.ENEMY, 
+		image = "rbxassetid://90356868289376",
+		description = "Deals {1.value} damage to target enemy.",
+		sound = AudioRepo.SFX.Fire,
+		cost = 2,
+		range = 5,
+		radius = 0,
+		effects = {
+			{ 
+				effectType = EffectTypes.DAMAGE, 
+				damageType = DamageTypes.DIRECT,
+				value = 14
+			},
+		},
+		upgrades = {
+			{
+				stat = "1.value",
+				value = 5
+			},
+		}
+	},
 }
 
 return CardDatabase
