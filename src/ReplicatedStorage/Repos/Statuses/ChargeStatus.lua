@@ -12,7 +12,7 @@ end
 
 function CustomStatus:execute(target, eventObserver, gameInstance, deckManager, playerState)
 	local unsubscribe = eventObserver:subscribeTo(GameEvents.START_UNIT_TURN, function(data)
-		if data.target == target then
+		if data.unit == target then
 			gameInstance:grantEnergy(target, self.value)
 		end
 	end)

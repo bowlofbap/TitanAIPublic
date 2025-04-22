@@ -138,5 +138,30 @@ return function()
 				expect(unit:getStatus(statusType)).never.to.be.ok()
 			end)
 		end)
+
+		describe("StatusTest", function()
+            local statusType = StatusTypes.CHARGE_BUFF
+			beforeEach(function()
+				testStatusType = statusType
+				testStatusValue = 1
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. statusType.name .." works correctly", function()
+				--setup
+				CurrentInstance:start()
+				local unit = CurrentInstance.player.unit
+                CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue)
+                --testing that it does stack
+                CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue) 
+
+                --action
+				passTurn()
+                
+                --assert
+				expect(unit:getStatus(testStatusType).value).to.equal(testStatusValue*2)
+				expect(CurrentInstance.player.energy).to.equal(CurrentInstance.player.turnEnergy + testStatusValue * 2)
+			end)
+		end)
     end)
 end
