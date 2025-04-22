@@ -12,20 +12,12 @@ local NodeInstanceFactory = require(ServerScriptService.NodeInstance.NodeInstanc
 local StateSyncBuffer = require(ServerScriptService.General.StateSyncBuffer)
 local StateUpdate = require(ServerScriptService.General.StateUpdate)
 
-local CameraMethods = require(ReplicatedStorage.Enums.CameraMethods)
-local Angles = require(ReplicatedStorage.Enums.Angles)
 local EntityActions = require(ReplicatedStorage.Enums.Entity.EntityActions)
 local EntityUIActions = require(ReplicatedStorage.Enums.Entity.EntityUiActions)
-local CameraModes = require(ReplicatedStorage.Enums.Client.CameraModes)
 local ScreenTransitionTypes = require(ReplicatedStorage.Enums.Client.ScreenTransitionTypes)
 local GameEvents = require(ReplicatedStorage.Enums.GameEvents)
 local EntityDataRequests = require(ReplicatedStorage.Enums.Entity.EntityDataRequests)
 local MapNodeTypes = require(ReplicatedStorage.Enums.Entity.MapNodeTypes)
-
-local CameraEvent = ReplicatedStorage.Remotes.CameraEvent
-
-local ClientObjectLoader = require(ReplicatedStorage.Helpers.ClientObjectLoader)
-local Tables = require(ReplicatedStorage.Helpers.Tables)
 
 local GameEntityFolder = ReplicatedStorage.Models.Entity.GameEntity
 
