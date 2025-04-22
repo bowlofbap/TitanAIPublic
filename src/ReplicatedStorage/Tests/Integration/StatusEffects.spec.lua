@@ -1,5 +1,5 @@
 return function()
-	describe("Instances", function()
+	describe("Status Effects", function()
 		local ReplicatedStorage = game:GetService("ReplicatedStorage")
 		local ServerScriptService = game:GetService("ServerScriptService")
 		local CardExecutionContext = require(ReplicatedStorage.Helpers.GameInstance.Classes.ServerCardExecutionContext)
