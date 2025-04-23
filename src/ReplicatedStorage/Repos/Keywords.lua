@@ -30,10 +30,6 @@ local Keywords = {
 		name = "Deplete",
 		description = "Removes card from combat once played"
 	},
-	Tile = {
-		name = "Tile",
-		description = "Gain effects while standing on top"
-	},
 	Weaken = {
 		name = "Weaken",
 		description = "Reduce damage dealt by "..(Constants.INSTANCE_SETTINGS.BATTLE_SETTINGS.WEAKEN_VALUE*100).."%"

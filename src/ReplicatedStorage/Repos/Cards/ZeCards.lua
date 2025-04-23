@@ -372,7 +372,7 @@ local CardDatabase = {
 		},
 		cardType = CardTypes.UTILITY,
 		rarity = RarityTypes.COMMON,
-		unitAnimation = AnimationTypes.ATTACKING,
+		unitAnimation = AnimationTypes.BUFFING,
 		targetType = TargetTypes.SELECT_NODE,
 		targetChoice = TargetChoices.NONE, 
 		effectChoice = TargetChoices.NONE, 
@@ -412,7 +412,7 @@ local CardDatabase = {
 		},
 		cardType = CardTypes.UTILITY,
 		rarity = RarityTypes.COMMON,
-		unitAnimation = AnimationTypes.ATTACKING,
+		unitAnimation = AnimationTypes.BUFFING,
 		targetType = TargetTypes.SELF,
 		targetChoice = TargetChoices.NONE, 
 		effectChoice = TargetChoices.NONE, 
@@ -432,6 +432,40 @@ local CardDatabase = {
 			{
 				stat = "cost",
 				value = -1
+			},
+		}
+	},
+	["ZC011"] = {
+		stringName = "Lock-On",
+		animationClass = nil,
+		tags = {
+			{
+				tagType = CardAttributeTags.REQUIRES_TARGET,
+			},
+		},
+		cardType = CardTypes.UTILITY,
+		rarity = RarityTypes.COMMON,
+		unitAnimation = AnimationTypes.BUFFING,
+		targetType = TargetTypes.SELECT_UNIT,
+		targetChoice = TargetChoices.ENEMY, 
+		effectChoice = TargetChoices.ENEMY, 
+		image = "rbxassetid://90356868289376",
+		description = "Applies Mark to a target enemy.",
+		sound = AudioRepo.SFX.Fire,
+		cost = 0,
+		range = 5,
+		radius = 0,
+		effects = {
+			{ 
+				effectType = EffectTypes.STATUS, 
+				statusType = StatusTypes.MARK_DEBUFF,
+				value = 2
+			},
+		},
+		upgrades = {
+			{
+				stat = "1.value",
+				value = 5
 			},
 		}
 	},
