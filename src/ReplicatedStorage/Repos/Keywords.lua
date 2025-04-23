@@ -54,7 +54,10 @@ local Keywords = {
 		name = "Trace",
 		description = "Applies one Mark when dealing damage"
 	},
-	
+	Momentum = {
+		name = "Momentum",
+		description = "Gives one "..Constants.MOVEMENT_CURRENCY_NAME.." each time energy is spent"
+	},
 
 	--TILES
 	Electrocharged = {

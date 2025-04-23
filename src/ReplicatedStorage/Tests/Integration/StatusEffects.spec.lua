@@ -85,7 +85,7 @@ return function()
 
 			it("Confirms that ".. statusType.name .." works correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(statusType.name)
 				local unit = CurrentInstance.player.unit
                 CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue)
 
@@ -119,7 +119,7 @@ return function()
 
 			it("Confirms that ".. statusType.name .." works correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(statusType.name)
 				local unit = CurrentInstance.player.unit
                 CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue)
                 --testing that it doesn't stack
@@ -150,7 +150,7 @@ return function()
 
 			it("Confirms that ".. statusType.name .." works correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(statusType.name)
 				local unit = CurrentInstance.player.unit
                 CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue)
                 --testing that it does stack
@@ -175,7 +175,7 @@ return function()
 
 			it("Confirms that ".. statusType.name .." works correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(statusType.name)
 				local playerUnit = CurrentInstance.player.unit
 				local unit = CurrentInstance.unitHolder:getEnemies(playerUnit.Team)[1]
                 CurrentInstance:applyStatus(playerUnit, {unit}, testStatusType, testStatusValue)
@@ -201,7 +201,7 @@ return function()
 
 			it("Confirms that ".. statusType.name .." works correctly", function()
 				--setup
-				CurrentInstance:start()
+				CurrentInstance:start(statusType.name)
 				local playerUnit = CurrentInstance.player.unit
 				local unit = CurrentInstance.unitHolder:getEnemies(playerUnit.Team)[1]
                 CurrentInstance:applyStatus(playerUnit, {playerUnit}, testStatusType, testStatusValue)
@@ -220,6 +220,88 @@ return function()
                 --assert
 				expect(eventChecks).to.equal(2)
 				expect(unit:getStatus(StatusTypes[statusType.targetStatusKey]).value).to.equal(2)
+			end)
+		end)
+
+		describe("StatusTest", function()
+            local statusType = StatusTypes.CHARGE_BUFF
+			beforeEach(function()
+				testStatusType = statusType
+				testStatusValue = 1
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. statusType.name .." works correctly", function()
+				--setup
+				CurrentInstance:start(statusType.name)
+				local unit = CurrentInstance.player.unit
+                CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue)
+                --testing that it does stack
+                CurrentInstance:applyStatus(unit, {unit}, testStatusType, testStatusValue) 
+
+                --action
+				passTurn()
+                
+                --assert
+				expect(unit:getStatus(testStatusType).value).to.equal(testStatusValue*2)
+				expect(CurrentInstance.player.energy).to.equal(CurrentInstance.player.turnEnergy + testStatusValue * 2)
+			end)
+		end)
+
+		describe("StatusTest", function()
+            local statusType = StatusTypes.MARK_DEBUFF
+			beforeEach(function()
+				testStatusType = statusType
+				testStatusValue = 2
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. statusType.name .." works correctly", function()
+				--setup
+				CurrentInstance:start(statusType.name)
+				local playerUnit = CurrentInstance.player.unit
+				local unit = CurrentInstance.unitHolder:getEnemies(playerUnit.Team)[1]
+                CurrentInstance:applyStatus(playerUnit, {unit}, testStatusType, testStatusValue)
+                --testing that it does stack
+                CurrentInstance:applyStatus(playerUnit, {unit}, testStatusType, testStatusValue) 
+				local previousCardNumber = #CurrentInstance.player:getHand()
+                --action
+				CurrentInstance:dealDamage(playerUnit, {unit}, unit.health, DamageTypes.DIRECT)
+                
+                --assert
+				expect(CurrentInstance.player.energy).to.equal(CurrentInstance.player.turnEnergy + testStatusValue * 2)
+				expect(#CurrentInstance.player:getHand()).to.equal(previousCardNumber + testStatusValue)
+			end)
+		end)
+
+		describe("StatusTest", function()
+            local statusType = StatusTypes.MOMENTUM_BUFF
+			beforeEach(function()
+				testStatusType = statusType
+				testStatusValue = 1
+				setupGameInstance()
+			end)
+
+			it("Confirms that ".. statusType.name .." works correctly", function()
+				--setup
+				CurrentInstance:start(statusType.name)
+				local playerUnit = CurrentInstance.player.unit
+				local mockCard = {cardData = {cost = 1}}
+				local mockContext = {
+					getCaster = function()
+						return playerUnit
+					end
+				}
+				local startingMovementPoints = CurrentInstance.player.movement
+                CurrentInstance:applyStatus(playerUnit, {playerUnit}, testStatusType, testStatusValue)
+				--test that it doesn't stack
+                CurrentInstance:applyStatus(playerUnit, {playerUnit}, testStatusType, testStatusValue) 
+				
+                --action
+				CurrentInstance:spendEnergy(mockCard, mockContext)
+                
+                --assert
+				expect(CurrentInstance.player.movement).to.equal(startingMovementPoints + 1)
 			end)
 		end)
     end)

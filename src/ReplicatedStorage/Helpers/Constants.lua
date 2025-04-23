@@ -1,6 +1,7 @@
 local Constants = {
 	BOARD_SIZE = Vector2.new(8, 4),
 	MONEY_NAME = "Money",
+	MOVEMENT_CURRENCY_NAME = "Movement Point",
 	PLAYER_SETTINGS = {
 		STARTING_MONEY = 500,
 		STARTING_HAND_SIZE = 6

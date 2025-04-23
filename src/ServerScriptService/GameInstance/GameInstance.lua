@@ -117,10 +117,11 @@ function GameInstance:requestPlayCard(data)
 	local targetCoordinates = data.targetCoordinates
 	local caster = self.player.unit
 	local cardToPlay = self.player.hand:getCardById(cardId)
+	local extraData = data.extraData
 	if not cardToPlay then
 		warn("card is not in hand anymore")
 	end
-	local context = CardExecutionContext.new(self, cardToPlay.cardData, caster, targetCoordinates)
+	local context = CardExecutionContext.new(self, cardToPlay.cardData, caster, targetCoordinates, extraData)
 	if TargetingRules.canBePlayed(context) and self.player:canPlayCard(cardToPlay) then
 		self:executePlayerCard(cardToPlay, context)
 	else
@@ -157,7 +158,7 @@ end
 
 function GameInstance:executePlayerCard(cardToPlay, context: ContextType.context)
 	self.player.executingCard = true
-	self.player:payCost(cardToPlay)
+	self:spendEnergy(cardToPlay, context)
 	self.player.hand:remove(cardToPlay)
 	self.stateSyncBuffer:addAwaitingStep()
 	self.stateSyncBuffer:add(StateUpdate.new(UiActions.PLAY_CARD, {cardId = cardToPlay.id}))
@@ -177,6 +178,11 @@ function GameInstance:executePlayerCard(cardToPlay, context: ContextType.context
 	self.stateSyncBuffer:flush()
 	self.player.executingCard = false
 	--self:updatePlayableCards()
+end
+
+function GameInstance:spendEnergy(cardToPlay, context)
+	local spentEnergy = self.player:payCost(cardToPlay)
+	self:fireGameEvent(GameEventsTypes.SPEND_ENERGY, {value = spentEnergy, source = context:getCaster()})
 end
 
 function GameInstance:_executeCard(cardToPlay, context: ContextType.context)
@@ -509,6 +515,15 @@ function GameInstance:grantEnergy(unit, value)
 	if unit == self.player.unit then
 		self.player:grantEnergy(value)	
 		self:fireGameEvent(GameEventsTypes.GRANT_ENERGY, {unit = unit, value = value})	
+	else
+		warn("Cannot give unit energy", unit, value)
+	end
+end
+
+function GameInstance:grantMovementPoints(unit, value)
+	if unit == self.player.unit then
+		self.player:gainMovement(value)	
+		self:fireGameEvent(GameEventsTypes.GRANT_MOVEMENT, {unit = unit, value = value})	
 	else
 		warn("Cannot give unit energy", unit, value)
 	end

@@ -48,7 +48,7 @@ function HandLayoutManager:updateLayout()
 			card.ZIndex = 100
 		end
 
-		card.Position = pos
+		card:moveTo(pos)
 	end
 end
 

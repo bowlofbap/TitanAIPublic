@@ -469,6 +469,76 @@ local CardDatabase = {
 			},
 		}
 	},
+	["ZC012"] = {
+		stringName = "Flow State",
+		animationClass = nil,
+		tags = {
+
+		},
+		cardType = CardTypes.UTILITY,
+		rarity = RarityTypes.COMMON,
+		unitAnimation = AnimationTypes.BUFFING,
+		targetType = TargetTypes.SELF,
+		targetChoice = TargetChoices.ALLY, 
+		effectChoice = TargetChoices.ALLY, 
+		image = "rbxassetid://90356868289376",
+		description = "Applies Momentum to self",
+		sound = AudioRepo.SFX.Fire,
+		cost = 1,
+		range = 0,
+		radius = 0,
+		effects = {
+			{ 
+				effectType = EffectTypes.STATUS, 
+				statusType = StatusTypes.MOMENTUM_BUFF,
+				value = 1
+			},
+		},
+		upgrades = {
+			{
+				stat = "cost",
+				value = -1
+			},
+		}
+	},
+	["ZC013"] = {
+		stringName = "Voltage Cycle",
+		animationClass = nil,
+		tags = {
+			{
+				tagType = CardAttributeTags.SELECT_HAND_CARDS,
+				value = 2
+			},
+		},
+		cardType = CardTypes.UTILITY,
+		rarity = RarityTypes.COMMON,
+		unitAnimation = AnimationTypes.BUFFING,
+		targetType = TargetTypes.SELF,
+		targetChoice = TargetChoices.ALLY, 
+		effectChoice = TargetChoices.ALLY, 
+		image = "rbxassetid://90356868289376",
+		description = "Discard 2 cards. Gain {1.value} energy.",
+		sound = AudioRepo.SFX.Fire,
+		cost = 0,
+		range = 0,
+		radius = 0,
+		effects = {
+			{
+				effectType = EffectTypes.CUSTOM,
+				customEffect = CustomEffects.DiscardSelectedEffect,
+			},
+			{ 
+				effectType = EffectTypes.GRANT_ENERGY, 
+				value = 2
+			},
+		},
+		upgrades = {
+			{
+				stat = "1.value",
+				value = 1
+			},
+		}
+	},
 }
 
 return CardDatabase

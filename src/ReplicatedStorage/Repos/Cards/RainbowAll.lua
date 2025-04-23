@@ -40,7 +40,7 @@ local CardDatabase = {
 		sound = AudioRepo.SFX.Fire,
 		cost = 1,
 		range = 4,
-		radius = 1,
+		radius = 0,
 		effects = {
 			{ 
 				effectType = EffectTypes.DAMAGE, 

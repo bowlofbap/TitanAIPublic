@@ -8,6 +8,7 @@ local GameEvents = {
 	ATTACKING = "Attacking",
 	BEFORE_DAMAGE = "Before Damage",
 	AFTER_DAMAGE = "After Damage",
+	SPEND_ENERGY = "Spend Energy",
 	HEALING = "Healing",
 	DEATH = "Dead",
 	CHANGE_PHASE = "Turn Change",
@@ -24,6 +25,7 @@ local GameEvents = {
 	OPENING_CARD_PACK = "Opening card pack",
 	HEALTH_CHANGED = "Health Changed",
 	GRANT_ENERGY = "Grant Energy",
+	GRANT_MOVEMENT = "Grant Movement",
 	CHANGE_TILE = "Change Tile",
 	
 	--GAME ENTITY EVENTS--

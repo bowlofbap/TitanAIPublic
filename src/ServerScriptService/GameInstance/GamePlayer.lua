@@ -5,11 +5,10 @@ local Hand = require(game:GetService("ServerScriptService").GameInstance.Hand)
 local GamePlayer = {}
 GamePlayer.__index = GamePlayer
 
-function GamePlayer.new(robloxPlayer, playerState, deckData, idGenerator, unitHolder)
+function GamePlayer.new(robloxPlayer, playerState, deckData, idGenerator)
 	local self = setmetatable({}, GamePlayer)
 	self.robloxPlayer = robloxPlayer
 	self.turnCards = playerState.handSize
-	self.unitHolder = unitHolder
 	self.energy = playerState.turnEnergy
 	self.movement = playerState.turnMovement
 	self.turnEnergy = playerState.turnEnergy
@@ -54,9 +53,19 @@ function GamePlayer:replenishEnergy()
 end
 
 function GamePlayer:replenishMovement()
+	local currentMovement = self.movement
 	if self.movement < self.turnMovement then
-		self.movement = self.turnMovement
+		self:gainMovement(self.turnMovement)
+		if self.movement > self.turnMovement then
+			self.movement = self.turnMovement
+		end
 	end
+	return self.movement - currentMovement
+end
+
+function GamePlayer:gainMovement(value)
+	self.movement += value
+	return value
 end
 
 function GamePlayer:canPlayCard(cardToPlay)
@@ -100,7 +109,9 @@ end
 
 function GamePlayer:payCost(card)
 	--add hook here for the card if there are more things to pay costs for, like health
-	self.energy -= card.cardData.cost
+	local cardCost = card.cardData.cost
+	self.energy -= cardCost
+	return cardCost
 end
 
 function GamePlayer:getHand()

@@ -3,13 +3,18 @@ local TargetChoices = require(game:GetService("ReplicatedStorage").Enums.TargetC
 local ClientCardExecutionContext = {}
 ClientCardExecutionContext.__index = ClientCardExecutionContext
 
-function ClientCardExecutionContext.new(clientGame, cardData, caster, mainCoordinates)
+function ClientCardExecutionContext.new(clientGame, cardData, caster, mainCoordinates, extraData)
 	local self = setmetatable({}, ClientCardExecutionContext)
 	self._clientGame = clientGame
 	self._cardData = cardData
 	self._caster = caster
 	self._mainCoordinates = mainCoordinates
+	self._extraData = extraData
 	return self
+end
+
+function ClientCardExecutionContext:getExtraData()
+	return self._extraData
 end
 
 function ClientCardExecutionContext:getMainCoordinates()

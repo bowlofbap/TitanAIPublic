@@ -24,7 +24,7 @@ return function()
 		local eventChecks = 0
 		local upgraded = false
 
-		local function setupGameInstance(testLevel)
+		local function setupGameInstance(testLevel, numCards)
 			print("setting up for new instance") 
 			eventChecks = 0
 			MockedPlayer = Instance.new("Part")
@@ -32,7 +32,7 @@ return function()
             local testDeck = {
                 {
                     cardName = testCardName,
-                    amount = 1,
+                    amount = numCards or 1,
                     upgraded = upgraded
                 },
             }
@@ -100,7 +100,7 @@ return function()
 				end)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(eventChecks).to.equal(1)
@@ -134,7 +134,7 @@ return function()
 				end)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(expectedEnemies[1]:getStatus(StatusTypes.WEAKEN_DEBUFF)).to.be.ok()
@@ -168,7 +168,7 @@ return function()
 				end)
 
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(caster:getStatus(StatusTypes.REFLECT_BUFF)).to.be.ok()
@@ -205,7 +205,7 @@ return function()
 				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
 
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(caster:getStatus(StatusTypes.STRENGTH_BUFF)).to.be.ok()
@@ -245,7 +245,7 @@ return function()
 				end)
 
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				local occupyingUnit = CurrentInstance.board:isNodeAtCoordsOccupied(targetCoordinates)
@@ -289,7 +289,7 @@ return function()
 				expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(expectedTargetEnemy:getStatus(StatusTypes.ROOT_DEBUFF)).to.be.ok()
@@ -328,7 +328,7 @@ return function()
 				expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(eventChecks).to.equal(3)
@@ -367,9 +367,11 @@ return function()
 					expect(data.source).to.equal(caster)
 					eventChecks+=1
 				end)
+
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(eventChecks).to.equal(2)
@@ -402,9 +404,11 @@ return function()
 					expect(data.statusType).to.equal(testingCard.cardData.effects[2].statusType)
 					eventChecks+=1
 				end)
+
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(expectedEnemies[1].coordinates).to.equal(previousCoordinates)
@@ -442,7 +446,7 @@ return function()
 				expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(eventChecks).to.equal(1)
@@ -481,7 +485,7 @@ return function()
 				--expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(eventChecks).to.equal(2)
@@ -520,10 +524,120 @@ return function()
 				expect(TargetingRules.canBePlayed(context)).to.equal(true)
 	
 				--action
-				CurrentInstance:requestPlayCard(mockedClientData, context)
+				CurrentInstance:requestPlayCard(mockedClientData)
 	
 				--assert
 				expect(eventChecks).to.equal(2)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC011"
+			beforeEach(function()
+				testCardName = cardName
+				upgraded = false
+				setupGameInstance(1)
+			end)
+
+			it("Confirms that ".. cardName .." is executes correctly", function()
+				--setup
+				CurrentInstance:start(cardName)
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = CurrentInstance.unitHolder:getEnemies(caster.Team)[1].coordinates
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				local expectedEnemies = TargetingRules.getValidTargets(context)
+
+				EventObserver:subscribeTo(GameEvents.APPLYING_STATUS, function(data)
+					expect(data.statusType).to.equal(testingCard.cardData.effects[1].statusType)
+					expect(data.target).to.equal(expectedEnemies[1])
+					eventChecks+=1
+				end)
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
+	
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData)
+	
+				--assert
+				expect(eventChecks).to.equal(1)
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC012"
+			beforeEach(function()
+				testCardName = cardName
+				upgraded = false
+				setupGameInstance(1)
+			end)
+
+			it("Confirms that ".. cardName .." is executes correctly", function()
+				--setup
+				CurrentInstance:start(cardName)
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates)
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
+
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData)
+	
+				--assert
+				expect(caster:getStatus(testingCard.cardData.effects[1].statusType)).to.be.ok()
+
+				--action
+				passTurn()
+
+				--assert
+				expect(caster:getStatus(testingCard.cardData.effects[1].statusType)).never.to.be.ok()
+			end)
+		end)
+
+		describe("CardTest", function()
+			local cardName = "ZC013"
+			beforeEach(function()
+				testCardName = cardName
+				upgraded = false
+				setupGameInstance(1, 4)
+			end)
+
+			it("Confirms that ".. cardName .." is executes correctly", function()
+				--setup
+				CurrentInstance:start(cardName)
+				local caster = CurrentInstance.player.unit
+				local testingCard = CurrentInstance.player.hand:getCardByPlace(1)
+				local targetCoordinates = nil
+				local extraData = {
+					selectedCardIds = {
+						CurrentInstance.player.hand:getCardByPlace(2).id, CurrentInstance.player.hand:getCardByPlace(3).id
+					}
+				}
+					
+				local mockedClientData = {
+					cardId = testingCard.id,
+					targetCoordinates = targetCoordinates,
+					extraData = extraData
+				}
+				local context = CardExecutionContext.new(CurrentInstance, testingCard.cardData, caster, targetCoordinates, extraData)
+				local originalEnergy = CurrentInstance.player.energy
+				local cardsInHand = #CurrentInstance.player:getHand()
+				expect(TargetingRules.canBePlayed(context)).to.equal(true)
+
+				--action
+				CurrentInstance:requestPlayCard(mockedClientData)
+	
+				--assert
+				expect(CurrentInstance.player.energy).to.equal(originalEnergy + testingCard.cardData.effects[2].value)
+				expect(#CurrentInstance.player:getHand()).to.equal(cardsInHand-3)
 			end)
 		end)
     end)

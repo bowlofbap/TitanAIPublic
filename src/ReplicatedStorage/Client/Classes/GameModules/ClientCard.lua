@@ -69,12 +69,6 @@ function ClientCard.new(data, cardId, upgraded)
 		self.model.HealthFrame.Label.Text = self.data.effects[1].health
 		self.model.HealthFrame.Visible = true
 	end
-	
-	self.baseProperties = {
-		Rotation = nil,
-		Position = nil,
-		ZIndex = nil,
-	}
 
 	local mt = {
 		__index = function(table, key)
@@ -102,6 +96,10 @@ function ClientCard.new(data, cardId, upgraded)
 	return self
 end
 
+function ClientCard:moveTo(position)
+	self.Position = position
+end
+
 function ClientCard:adjustTransparency(value)
 	self.model.TransparencyGroup.GroupTransparency = value
 	for _, descendant in ipairs(self.model:GetDescendants()) do
@@ -114,18 +112,6 @@ function ClientCard:adjustTransparency(value)
 				descendant.ImageTransparency = value
 			end
 		end
-	end
-end
-
-function ClientCard:updateBaseProperties(position, rotation, zindex)
-	if position then
-		self.baseProperties.Position = position
-	end
-	if rotation then
-		self.baseProperties.Rotation = rotation
-	end
-	if zindex then
-		self.baseProperties.ZIndex = zindex
 	end
 end
 
@@ -152,6 +138,7 @@ function ClientCard:playAnimationAndWait(context)
 		return require(animateFunction).play(context)
 	else
 		warn("No animation for card ", self)
+		return 
 	end
 end
 

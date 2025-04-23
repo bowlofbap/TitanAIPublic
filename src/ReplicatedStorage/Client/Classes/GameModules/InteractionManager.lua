@@ -88,6 +88,31 @@ function InteractionManager:_registerStateHandlers()
 			self:_clearDraggedCardState(stateData)
 		end,
 	})
+
+	self._stateMachine:registerStateHandler(InteractionStates.SELECTING_CARDS, {
+		[UserInputTypes.MouseDown] = function(input, stateData)
+			local hoveringCard = self:_getCardUnderMouse(input)
+		end,
+		[UserInputTypes.MouseMoved] = function(input, stateData)
+			local hoveringCard = self:_getCardUnderMouse(input)
+			if hoveringCard and hoveringCard ~= stateData.hoveringCard then
+				self:_clearHoverState(stateData)
+				hoveringCard:runHoverFunction()
+				stateData.hoveringCard = hoveringCard
+			elseif not hoveringCard and stateData.hoveringCard then
+				self:_clearHoverState(stateData)
+			end
+		end,
+		[UserInputTypes.KeyPressed] = function(input)
+			self:_attemptMoveUnit(input)
+		end,
+		onEnter = function()
+			
+		end,
+		onExit = function()
+			
+		end,
+	})
 end
 
 function InteractionManager:_clearHoverState(stateData)

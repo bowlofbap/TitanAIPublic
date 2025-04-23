@@ -123,8 +123,16 @@ StatusTypes = {
 		image="",
 		defaultTickable = false, 
 		stackable = true,
-		class = "ApplyStatusOnHit",
+		class = "ApplyStatusOnHitStatus",
 		targetStatusKey = "MARK_DEBUFF",
+		isBuff = true,
+	},
+	MOMENTUM_BUFF = {
+		name = "Momentum",
+		image = "",
+		defaultTickable = true, 
+		stackable = false,
+		class = "MomentumStatus",
 		isBuff = true,
 	},
 	

@@ -10,7 +10,9 @@ local EffectTypes = {
 	DEPLETE = "DepleteEffect",
 	NODE_CHANGE = "NodeChangeEffect",
 	DEPLOY = "DeployEffect",
-	CUSTOM = "CustomEffect"
+	CUSTOM = "CustomEffect",
+	GRANT_ENERGY = "GrantEnergyEffect",
+	GRANT_MOVEMENT = "GrantMovementEffect",
 }
 
 return EffectTypes

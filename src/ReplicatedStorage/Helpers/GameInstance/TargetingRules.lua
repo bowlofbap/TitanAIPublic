@@ -142,6 +142,14 @@ function TargetingRules.canBePlayed(context)
 		end
 	end
 
+	if CardUtils.hasTag(cardData, CardAttributeTags.SELECT_HAND_CARDS) then
+		local selectedCardIds = context:getExtraData().selectedCardIds
+		local tag = CardUtils.hasTag(cardData, CardAttributeTags.SELECT_HAND_CARDS)
+		if #selectedCardIds ~= tag.value then
+			return false, "Not matching selected card number" 
+		end
+	end
+
 	if CardUtils.hasTag(cardData, CardAttributeTags.CUSTOM_CAN_BE_PLAYED) then
 		local override = PlayabilityOverrides[cardData.key] --TODO
 		if override then
