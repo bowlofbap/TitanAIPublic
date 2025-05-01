@@ -1,0 +1,116 @@
+name: CI checks + deployment
+
+on:
+  pull_request:
+    branches:
+        - production
+        - test
+  push:
+    branches: 
+        - production
+        - test
+        - 'feat/**'
+
+jobs:
+  install-tools:
+    name: Install tools
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.3.0
+      - name: Set up Aftman
+        uses: ok-nick/setup-aftman@v0.4.2
+      - name: Cache Aftman tools
+        uses: actions/cache@v3
+        with:
+          path: ~/.aftman
+          key: aftman-${{ hashFiles('aftman.toml') }}
+      - name: Install Wally dependencies
+        run: wally install
+      - name: Cache Wally Packages folder
+        uses: actions/cache@v3
+        with:
+          path: Packages
+          key: packages-j.6${{ hashFiles('wally.lock') }}
+
+  luau-tests:
+    name: Run Luau tests via Open Cloud
+    runs-on: ubuntu-latest
+    needs: [install-tools]
+    concurrency:
+      group: luau-execution
+      cancel-in-progress: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.3.0
+      - name: Restore cached Aftman tools
+        uses: actions/cache@v3
+        with:
+          path: ~/.aftman
+          key: aftman-${{ hashFiles('aftman.toml') }}
+      - name: Restore Wally cache
+        uses: actions/cache@v3
+        with:
+          path: Packages
+          key: packages-j.6${{ hashFiles('wally.lock') }}
+      - name: Debug installed Wally packages
+        run: ls -lR Packages/_Index
+      - name: Make test.sh executable
+        run: chmod +x ./scripts/shell/test.sh
+      - name: Run tests
+        run: ./scripts/shell/test.sh test.project.json $TEST_TASK_FILE | tee test_output.log
+        env:
+          ROBLOX_API_KEY: ${{ secrets.TESTKEY }}
+          ROBLOX_UNIVERSE_ID: ${{ vars.ROBLOX_TEST_UNIVERSE_ID }}
+          ROBLOX_PLACE_ID: ${{ vars.ROBLOX_TEST_PLACE_ID }}
+          TEST_TASK_FILE: tasks/runTests.luau
+      - name: Extract test XML
+        id: extract_xml
+        run: |
+          OUTPUT=$(awk '
+          /<\?xml version="1.0" encoding="UTF-8"\?>/ {flag=1}
+          flag {
+              print
+              if (/<\/testsuites>/) {
+                  exit
+              }
+          }
+          ' test_output.log)
+          echo "$OUTPUT" > test-results.xml
+          {
+          echo "xml_output<<EOF"
+          echo "$OUTPUT"
+          echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: roblox-test-results
+          path: |
+            test-results.xml
+            dist.rbxl
+      - name: Upload test results
+        uses: dorny/test-reporter@v2
+        with:
+          name: roblox-test-results 
+          path: test-results.xml 
+          reporter: java-junit      
+
+
+  deployment:
+    name: Deployment
+    runs-on: ubuntu-latest
+    needs: [install-tools, luau-tests]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/production' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.3.0
+      - name: Set up Aftman
+        uses: ok-nick/setup-aftman@v0.4.2
+      - name: Restore cached Aftman tools
+        uses: actions/cache@v3
+        with:
+          path: ~/.aftman
+          key: aftman-${{ hashFiles('aftman.toml') }}
+      - name: Upload production build
+        run: $HOME/.aftman/bin/rojo upload default.project.json --api_key ${{ secrets.DEPLOYKEY }} --universe_id ${{ vars.ROBLOX_PRODUCTION_UNIVERSE_ID }} --asset_id ${{ vars.ROBLOX_PRODUCTION_PLACE_ID }}

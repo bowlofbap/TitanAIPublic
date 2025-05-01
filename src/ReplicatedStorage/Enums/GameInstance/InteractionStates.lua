@@ -1,0 +1,9 @@
+local states = {
+	IDLE = "IDLE",
+	CARD_DRAGGING = "CARD_DRAGGING",
+	SELECTING_CARDS = "SELECTING_CARDS",
+	PAUSED = "PAUSED",
+	GAME_OVER = "GAME_OVER",
+}
+
+return states

@@ -1,0 +1,3 @@
+{
+	"globals": ["expect", "it", "describe", "beforeEach", "afterEach"] // TestEZ
+}

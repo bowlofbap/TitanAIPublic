@@ -1,0 +1,53 @@
+# === Core Rojo Project ===
+*.rbxl
+*.rbxlx
+*.rbxmx
+*.rblx
+*.rblxmx
+*.rbx
+*.rbxl.tmp
+*.rbxl.autosave
+*.rbxlx.autosave
+
+
+# === Studio Session Junk ===
+*.log
+*.tmp
+*.mrbxl
+*.rbxl-prev
+*.rbxlx-prev
+
+# === Rojo Build Artifacts ===
+build/
+out/
+dist/
+
+# === Wally (Dependency Manager) ===
+wally.lock
+Packages/
+packages/
+
+# === Luau LSP / Selene / Stylua ===
+luau-lsp.json
+.stylua.toml
+.selene.toml
+selene.d/
+
+# === System / Editor ===
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*.tmp
+
+# === Node Tools (optional) ===
+node_modules/
+yarn.lock
+package-lock.json
+
+# === Test Artifacts ===
+coverage/
+test-results/
+
+sourcemap.json
+test-results.xml
