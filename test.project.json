@@ -1,0 +1,66 @@
+{
+    "name": "TitanAI",
+    "tree": {
+      "$className": "DataModel",
+      "Players": {
+        "$className": "Players",
+        "$properties": {
+          "CharacterAutoLoads": false
+        }
+      },
+      "ReplicatedStorage": {
+        "Packages": {
+            "$path": "Packages"
+        },
+        "$className": "ReplicatedStorage",
+        "TestRunner":{
+            "$path": "src/ReplicatedStorage/TestRunner.lua"
+        },
+        "Client": {
+            "$path": "src/ReplicatedStorage/Client"
+        },
+        "Services": {
+            "$path": "src/ReplicatedStorage/Services"
+        },
+        "Enums":{
+            "$path": "src/ReplicatedStorage/Enums"
+        },
+        "Helpers":{
+            "$path": "src/ReplicatedStorage/Helpers"
+        },
+        "Models":{
+            "$path": "src/ReplicatedStorage/Models"
+        },
+        "Remotes":{
+            "$path": "src/ReplicatedStorage/Remotes"
+        },
+        "Repos":{
+            "$path": "src/ReplicatedStorage/Repos"
+        },
+        "Stages":{
+            "$path": "src/ReplicatedStorage/Stages"
+        },
+        "Tests":{
+            "$path": "src/ReplicatedStorage/Tests"
+        },
+        "env":{
+          "$path": "src/ReplicatedStorage/TestEnv.lua"
+        }
+      },
+      "StarterPlayer": {
+            "$className": "StarterPlayer",
+            "StarterPlayerScripts": {
+                "$path": "src/StarterPlayerScripts"
+            }
+      },
+      "ServerScriptService": {
+            "$path": "src/ServerScriptService"
+      },
+      "StarterGui": {
+        "$className": "StarterGui",
+        "PC": {
+            "$path": "src/StarterGui/PC"
+        }
+      }
+    }
+  }

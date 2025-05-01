@@ -1,0 +1,105 @@
+{
+    "name": "TitanAI",
+    "tree": {
+      "$className": "DataModel",
+      "Players": {
+        "$className": "Players",
+        "$properties": {
+          "CharacterAutoLoads": false
+        }
+      },
+      "ReplicatedStorage": {
+        "$className": "ReplicatedStorage",
+        "Packages": {
+              "$className": "Folder",
+              "_Index": {
+                "$className": "Folder",
+                "bowlofbap_profilestore@0.1.0": {
+                    "$path": "Packages/_Index/bowlofbap_profilestore@0.1.0"
+                },
+                "evaera_promise@4.0.0": {
+                    "$path": "Packages/_Index/evaera_promise@4.0.0"
+                }
+              },
+              "ProfileStore":{
+                "$path": "Packages/ProfileStore.lua"
+              },
+              "Promise":{
+                "$path": "Packages/Promise.lua"
+              }
+        },
+        "Client": {
+            "$path": "src/ReplicatedStorage/Client"
+        },
+        "Services": {
+            "$path": "src/ReplicatedStorage/Services"
+        },
+        "Enums":{
+            "$path": "src/ReplicatedStorage/Enums"
+        },
+        "Helpers":{
+            "$path": "src/ReplicatedStorage/Helpers"
+        },
+        "Models":{
+            "$path": "src/ReplicatedStorage/Models"
+        },
+        "Remotes":{
+            "$path": "src/ReplicatedStorage/Remotes"
+        },
+        "Repos":{
+            "$path": "src/ReplicatedStorage/Repos"
+        },
+        "Stages":{
+            "$path": "src/ReplicatedStorage/Stages"
+        },
+        "env":{
+          "$path": "src/ReplicatedStorage/ProdEnv.lua"
+        }
+      },
+      "StarterPlayer": {
+            "$className": "StarterPlayer",
+            "StarterPlayerScripts": {
+                "$path": "src/StarterPlayerScripts"
+            }
+      },
+      "ServerScriptService": {
+        "$className": "ServerScriptService",
+        "ChestInstance":{
+            "$path": "src/ServerScriptService/ChestInstance"
+        },
+        "EventInstance":{
+            "$path": "src/ServerScriptService/EventInstance"
+        },
+        "GameEntity":{
+            "$path": "src/ServerScriptService/GameEntity"
+        },
+        "GameInstance":{
+            "$path": "src/ServerScriptService/GameInstance"
+        },
+        "General":{
+            "$path": "src/ServerScriptService/General"
+        },
+        "NodeInstance":{
+            "$path": "src/ServerScriptService/NodeInstance"
+        },
+        "RestInstance":{
+            "$path": "src/ServerScriptService/RestInstance"
+        },
+        "ShopInstance":{
+            "$path": "src/ServerScriptService/ShopInstance"
+        },
+        "GameLoader": {
+            "$path": "src/ServerScriptService/GameLoader.server.lua"
+        },
+        "LoadScript": {
+            "$path": "src/ServerScriptService/LoadScript.server.lua"
+        }
+      },
+      "StarterGui": {
+        "$className": "StarterGui",
+        "PC": {
+            "$path": "src/StarterGui/PC"
+        }
+      }
+    }
+  }
